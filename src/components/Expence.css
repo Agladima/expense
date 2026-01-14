@@ -1,0 +1,233 @@
+/* RESET */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  font-family: system-ui, sans-serif;
+}
+
+/* ================= MAIN NAV ================= */
+.main-nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 64px;
+  background: #fff;
+  border-bottom: 1px solid #eee;
+  z-index: 1000;
+}
+
+.nav-left {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.icon-badge {
+  width: 36px;
+  height: 36px;
+  background: #1db954;
+  color: #fff;
+  border-radius: 10px;
+  display: grid;
+  place-items: center;
+  font-weight: bold;
+  font-size: 1.5rem;
+}
+
+.nav-left h2 {
+  font-size: 1.3rem;
+}
+
+.nav-left p {
+  font-size: 1rem;
+  color: #666;
+}
+
+.bell {
+  font-size: 1.2rem;
+  cursor: pointer;
+}
+
+.nav-container {
+  max-width: 1100px;
+  margin: auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.main-nav .nav-container {
+  max-width: 900px; /* ⬅️ match sub-nav width */
+  margin: auto;
+  padding: 0 1.5rem; /* ⬅️ same side padding as pill */
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.nav-right {
+  margin-left: auto; /* ⬅️ forces it to the far right */
+  display: flex;
+  align-items: center;
+}
+.bell {
+  font-size: 1.2rem;
+  cursor: pointer;
+}
+
+/* ================= SUB NAV ================= */
+.sub-nav {
+  margin-top: 64px;
+  padding: 0.75rem 0;
+  display: flex;
+  justify-content: center;
+  background: transparent; /* no full-width color */
+}
+.sub-nav .nav-container {
+  background: #f3faf5;
+  border: 1px solid #d9f0e2;
+  border-radius: 10px;
+  padding: 0.6rem 2rem; /* more horizontal space */
+  justify-content: center;
+  gap: 2rem;
+  max-width: 900px; /* ⬅️ increase width */
+  width: 100%;
+}
+
+.search {
+  padding: 0.45rem 0.6rem;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  width: 220px;
+}
+
+.menu {
+  display: flex;
+  align-items: center;
+  gap: 50px;
+}
+
+.menu-item {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.9rem;
+  color: #9bb7a7; /* faint green/grey */
+  cursor: pointer;
+  white-space: nowrap;
+  padding: 0.35rem 0.75rem;
+  border-radius: 999px;
+  transition: all 0.2s ease;
+}
+
+.menu-item svg {
+  font-size: 1.1rem;
+  color: inherit;
+}
+.menu-item:nth-child(4) {
+  background: #ffffff;
+  padding: 10px 20px;
+  color: #111;
+  font-weight: 600;
+  border-radius: 10px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+}
+.menu-item:nth-child(4):hover {
+  background: #ffffff;
+  color: #000;
+  font-weight: 600;
+}
+.menu-item:not(:nth-child(4)):hover {
+  color: #6f9f88; /* slightly visible, still faint */
+}
+
+.menu span {
+  cursor: pointer;
+  color: #444;
+}
+
+/* ================= PAGE ================= */
+.expenses-page {
+  max-width: 1100px;
+  margin: auto;
+  padding: 2rem 1.5rem;
+}
+
+/* FORM */
+.expense-form {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr) auto;
+  gap: 0.75rem;
+  margin: 1.5rem 0 2rem;
+}
+
+.expense-form input,
+.expense-form button {
+  padding: 0.6rem;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+.expense-form button {
+  background: #111;
+  color: #fff;
+  cursor: pointer;
+}
+
+/* LIST */
+.expense-list {
+  display: grid;
+  gap: 1rem;
+}
+
+.expense-card {
+  display: flex;
+  justify-content: space-between;
+  background: #f5f6f8;
+  padding: 1rem;
+  border-radius: 8px;
+}
+
+.category {
+  display: block;
+  font-size: 0.8rem;
+  color: #666;
+}
+
+.meta {
+  text-align: right;
+}
+
+.amount {
+  font-weight: 600;
+}
+
+.empty-state {
+  color: #777;
+  font-style: italic;
+}
+
+/* ================= RESPONSIVE ================= */
+@media (max-width: 768px) {
+  .sub-nav {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .menu {
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+
+  .expense-form {
+    grid-template-columns: 1fr;
+  }
+
+  .expense-card {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .meta {
+    text-align: left;
+  }
+}
