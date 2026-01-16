@@ -69,8 +69,7 @@
 }
 
 .sub-nav .nav-container {
-  background: #f3faf5;
-  border: 1px solid #d9f0e2;
+  background: #f6f7f9;
   border-radius: 10px;
   padding: 0.6rem 2rem;
   justify-content: center;
@@ -156,6 +155,7 @@
   padding: 12px;
   cursor: pointer;
   transition: 0.2s;
+  background: #f6f7f9;
 }
 
 .type-item h4 {
@@ -166,11 +166,6 @@
   font-size: 12px;
   color: #666;
   margin-top: 4px;
-}
-
-.type-item.active {
-  border-color: #2c9a89;
-  background: #f2fbf6;
 }
 
 .date-display {
@@ -186,6 +181,7 @@
   border: 1px solid #e4e6ea;
   border-radius: 8px;
   padding: 0 10px;
+  background: #f6f7f9;
 }
 
 .amount-box span {
@@ -198,6 +194,7 @@
   outline: none;
   padding: 10px 0;
   width: 100%;
+  background: #f6f7f9;
 }
 
 select,
@@ -207,6 +204,7 @@ textarea {
   border-radius: 8px;
   border: 1px solid #e4e6ea;
   outline: none;
+  background: #f6f7f9;
 }
 
 textarea {
@@ -222,10 +220,11 @@ textarea {
   position: relative;
   font-size: 14px;
   color: #555;
+  background: #f6f7f9;
 }
 
 .upload-area span {
-  display: block;
+  display: inline;
   margin-top: 6px;
   font-size: 12px;
   color: #888;
@@ -241,7 +240,57 @@ textarea {
 .workflow {
   display: flex;
   justify-content: space-between;
-  margin-top: 10px;
+  margin-top: 14px;
+}
+
+.workflow-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: 12px;
+  color: #777;
+  flex: 1;
+  position: relative;
+}
+
+.workflow-step:not(:last-child)::after {
+  content: "";
+  position: absolute;
+  top: 13px;
+  right: -50%;
+  width: 100%;
+  height: 2px;
+  background: #e6e6e6;
+  z-index: 0;
+}
+
+.step-circle {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: #e6e6e6;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  margin-bottom: 6px;
+  z-index: 1;
+}
+
+.step-label {
+  text-align: center;
+  line-height: 1.2;
+  max-width: 90px;
+}
+
+.workflow-step.active .step-circle {
+  background: #2c9a89;
+  color: #fff;
+}
+
+.workflow-step.active .step-label {
+  color: #2c9a89;
+  font-weight: 600;
 }
 
 .step {
@@ -279,10 +328,70 @@ textarea {
   font-weight: 600;
   cursor: pointer;
   transition: 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.send-icon {
+  font-size: 20px;
+  line-height: 1;
 }
 
 .submit-expense:hover {
   background: #2c9a89;
+}
+.date-input-container {
+  position: relative;
+}
+
+.date-display.dropdown {
+  background: #f2f3f5;
+  padding: 12px;
+  border-radius: 8px;
+  font-size: 14px;
+  cursor: pointer;
+  border: 1px solid #e4e6ea;
+}
+
+.date-display.dropdown:hover {
+  background: #eceef1;
+}
+
+.date-picker {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+.required {
+  color: #e53935;
+  font-weight: 700;
+}
+.upload-action {
+  color: #2c9a89;
+  font-weight: 600;
+}
+
+.upload-hint {
+  display: block;
+  margin-top: 6px;
+  font-size: 12px;
+  color: #888;
+}
+.upload-line {
+  margin-top: 8px;
+  font-size: 14px;
+  color: #555;
+  white-space: nowrap;
+}
+
+.upload-hint {
+  display: block;
+  margin-top: 6px;
+  font-size: 12px;
+  color: #888;
 }
 
 @media (max-width: 768px) {
@@ -298,5 +407,24 @@ textarea {
 
   .expense-form-card {
     margin-top: 12px;
+  }
+}
+
+@media (max-width: 600px) {
+  .menu-item span {
+    display: none;
+  }
+
+  .menu-item {
+    padding: 8px;
+    justify-content: center;
+  }
+
+  .menu {
+    gap: 16px;
+  }
+
+  .menu-item svg {
+    font-size: 1.4rem;
   }
 }
