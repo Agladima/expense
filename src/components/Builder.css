@@ -1,13 +1,13 @@
 .page-bg {
   min-height: 50vh;
   background: #f6f7f9;
-
   display: flex;
   justify-content: center;
-  align-items: flex-start; /* align top */
+  align-items: flex-start;
   padding: 40px 16px;
   width: 100%;
 }
+
 .builder-card {
   width: 100%;
   max-width: 800px;
@@ -16,10 +16,9 @@
   padding: 32px;
   border: 1px solid #e6e8eb;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.05);
-
   box-sizing: border-box;
 }
-/* Header with title and buttons */
+
 .builder-header {
   display: flex;
   justify-content: space-between;
@@ -32,10 +31,9 @@
   font-weight: 600;
 }
 
-/* Actions buttons side by side */
 .builder-actions {
   display: flex;
-  gap: 12px; /* spacing between buttons */
+  gap: 12px;
 }
 
 .builder-actions button {
@@ -73,7 +71,6 @@
   vertical-align: middle;
 }
 
-/* Form Name & Description */
 .form-meta {
   display: flex;
   gap: 24px;
@@ -100,14 +97,12 @@
   background: #f6f7f9;
 }
 
-/* Thin separator */
 .thin-separator {
   height: 1px;
   background: #e6e8eb;
   margin: 24px 0;
 }
 
-/* Fields section */
 .fields-section {
   display: flex;
   flex-direction: column;
@@ -120,7 +115,6 @@
   color: #555;
 }
 
-/* Drag & drop area */
 .drag-drop {
   height: 20vh;
   border: 1px dashed #dcdcdc;
@@ -134,11 +128,10 @@
   flex-direction: column;
 }
 
-/* First field button directly below drag-drop */
 .field-card {
   border: 1px solid #dcdcdc;
   border-radius: 8px;
-  padding: 12px;
+  padding: 9px 18px;
   background: #f6f7f9;
   color: #555;
   text-align: center;
@@ -149,10 +142,214 @@
   justify-content: center;
   gap: 6px;
   transition: 0.2s;
-  padding: 9px 18px;
   margin-top: 10px;
 }
 
 .field-card:hover {
   background: #eceef1;
+}
+
+.preview-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 24px;
+}
+
+.preview-title {
+  font-size: 22px;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+.preview-desc {
+  font-size: 14px;
+  color: #666;
+}
+
+.status-btn {
+  background: #2c9a89;
+  color: #fff;
+  border: none;
+  border-radius: 999px;
+  padding: 6px 14px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: default;
+}
+
+.submit-preview-btn {
+  width: 100%;
+  padding: 14px;
+  border-radius: 10px;
+  background: #2c9a89;
+  color: #fff;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  font-size: 15px;
+}
+
+.submit-preview-btn:hover {
+  background: #23806f;
+}
+
+.field-selector-card {
+  margin-top: 16px;
+  border: 1px solid #e6e8eb;
+  border-radius: 12px;
+  padding: 16px;
+  background: #fff;
+}
+
+.field-selector-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.field-selector-header h3 {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.cancel-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: none;
+  border: none;
+  color: #888;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.cancel-btn:hover {
+  color: #222;
+}
+
+.field-options-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+}
+
+.field-option {
+  border: 1px solid #e6e8eb;
+  border-radius: 10px;
+  padding: 14px;
+  text-align: center;
+  cursor: pointer;
+  transition: 0.2s;
+  background: #fafafa;
+}
+
+.field-option:hover {
+  background: #f0f2f5;
+}
+
+.field-option-icon {
+  font-size: 20px;
+  margin-bottom: 8px;
+  color: #111827;
+  padding: 20px;
+  border-radius: 8px;
+}
+
+.field-option h3 {
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.field-option p {
+  font-size: 12px;
+  color: #666;
+}
+
+@media (max-width: 1024px) {
+  .builder-card {
+    max-width: 100%;
+  }
+
+  .field-options-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .page-bg {
+    padding: 24px 12px;
+  }
+
+  .builder-card {
+    padding: 20px;
+  }
+
+  .builder-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .builder-actions {
+    width: 100%;
+  }
+
+  .builder-actions button {
+    flex: 1;
+    justify-content: center;
+  }
+
+  .form-meta {
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .preview-header {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .status-btn {
+    align-self: flex-start;
+  }
+
+  .field-options-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 480px) {
+  .builder-header h1 {
+    font-size: 18px;
+  }
+
+  .preview-title {
+    font-size: 18px;
+  }
+
+  .drag-drop {
+    height: auto;
+    padding: 24px 12px;
+    text-align: center;
+  }
+
+  .field-card {
+    width: 100%;
+  }
+
+  .submit-preview-btn {
+    font-size: 14px;
+    padding: 12px;
+  }
+
+  .field-options-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .field-option {
+    padding: 16px;
+  }
 }

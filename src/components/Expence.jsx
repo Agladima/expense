@@ -1,20 +1,12 @@
 import { useRef, useState } from "react";
 import "./Expence.css";
-import { RiMoneyDollarBoxLine } from "react-icons/ri";
-import { IoMdNotificationsOutline } from "react-icons/io";
-import { IoTimeOutline } from "react-icons/io5";
-import { CiStar, CiForkAndKnife } from "react-icons/ci";
-import { MdOutlineTune, MdOutlineTask } from "react-icons/md";
-import { LuClipboardList, LuCar, LuUpload } from "react-icons/lu";
+import { CiForkAndKnife } from "react-icons/ci";
+import { LuCar, LuUpload } from "react-icons/lu";
 import { SlPlane } from "react-icons/sl";
 import { FiShoppingBag, FiPaperclip, FiX } from "react-icons/fi";
 import { PiTelegramLogoLight } from "react-icons/pi";
-import { useNavigate } from "react-router-dom";
-import { NavLink } from "react-router-dom";
 
 function Expense() {
-  const navigate = useNavigate();
-
   const [amount, setAmount] = useState("");
   const [project, setProject] = useState("");
   const [description, setDescription] = useState("");
