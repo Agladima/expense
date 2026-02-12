@@ -9,8 +9,12 @@ import { LuClipboardList, LuCar, LuUpload } from "react-icons/lu";
 import { SlPlane } from "react-icons/sl";
 import { FiShoppingBag, FiPaperclip, FiX } from "react-icons/fi";
 import { PiTelegramLogoLight } from "react-icons/pi";
+import { useNavigate } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 
 function Expense() {
+  const navigate = useNavigate();
+
   const [amount, setAmount] = useState("");
   const [project, setProject] = useState("");
   const [description, setDescription] = useState("");
@@ -48,56 +52,6 @@ function Expense() {
 
   return (
     <>
-      <nav className="main-nav">
-        <div className="nav-container">
-          <div className="nav-left">
-            <div className="icon-badge">
-              <RiMoneyDollarBoxLine />
-            </div>
-            <div>
-              <h2>Expense Claim</h2>
-              <p>Submit Reimbursements</p>
-            </div>
-          </div>
-          <div className="nav-right">
-            <span className="bell">
-              <IoMdNotificationsOutline />
-            </span>
-          </div>
-        </div>
-      </nav>
-
-      <div className="sub-nav">
-        <div className="nav-container">
-          <div className="menu">
-            <div className="menu-item">
-              <MdOutlineTask />
-              <span>Submissions</span>
-            </div>
-            <div className="menu-item">
-              <IoTimeOutline />
-              <span>Timesheet</span>
-            </div>
-            <div className="menu-item">
-              <LuClipboardList />
-              <span>Task</span>
-            </div>
-            <div className="menu-item active">
-              <RiMoneyDollarBoxLine />
-              <span>Expense</span>
-            </div>
-            <div className="menu-item">
-              <CiStar />
-              <span>Review</span>
-            </div>
-            <div className="menu-item">
-              <MdOutlineTune />
-              <span>Builder</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
       <div className="page-bg">
         <div className="expense-form-card">
           <h2>Expense Type</h2>

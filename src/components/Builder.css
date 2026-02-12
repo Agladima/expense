@@ -1,0 +1,158 @@
+.page-bg {
+  min-height: 50vh;
+  background: #f6f7f9;
+
+  display: flex;
+  justify-content: center;
+  align-items: flex-start; /* align top */
+  padding: 40px 16px;
+  width: 100%;
+}
+.builder-card {
+  width: 100%;
+  max-width: 800px;
+  background: #fff;
+  border-radius: 14px;
+  padding: 32px;
+  border: 1px solid #e6e8eb;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.05);
+
+  box-sizing: border-box;
+}
+/* Header with title and buttons */
+.builder-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.builder-header h1 {
+  font-size: 22px;
+  font-weight: 600;
+}
+
+/* Actions buttons side by side */
+.builder-actions {
+  display: flex;
+  gap: 12px; /* spacing between buttons */
+}
+
+.builder-actions button {
+  padding: 10px 18px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: 0.2s;
+}
+
+.preview-btn {
+  background: #f6f7f9;
+  border: 1px solid #dcdcdc;
+}
+
+.preview-btn:hover {
+  background: #eceef1;
+}
+
+.save-btn {
+  background: #2c9a89;
+  color: #fff;
+}
+
+.save-btn:hover {
+  background: #23806f;
+}
+
+.icon-inline {
+  display: inline-flex;
+  vertical-align: middle;
+}
+
+/* Form Name & Description */
+.form-meta {
+  display: flex;
+  gap: 24px;
+  margin-bottom: 24px;
+}
+
+.form-meta div {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.form-meta label {
+  font-weight: 600;
+  font-size: 14px;
+  margin-bottom: 6px;
+}
+
+.form-meta input {
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #e4e6ea;
+  outline: none;
+  background: #f6f7f9;
+}
+
+/* Thin separator */
+.thin-separator {
+  height: 1px;
+  background: #e6e8eb;
+  margin: 24px 0;
+}
+
+/* Fields section */
+.fields-section {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.fields-header {
+  font-weight: 600;
+  font-size: 14px;
+  color: #555;
+}
+
+/* Drag & drop area */
+.drag-drop {
+  height: 20vh;
+  border: 1px dashed #dcdcdc;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #fafafa;
+  color: #888;
+  font-size: 14px;
+  flex-direction: column;
+}
+
+/* First field button directly below drag-drop */
+.field-card {
+  border: 1px solid #dcdcdc;
+  border-radius: 8px;
+  padding: 12px;
+  background: #f6f7f9;
+  color: #555;
+  text-align: center;
+  font-size: 14px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  transition: 0.2s;
+  padding: 9px 18px;
+  margin-top: 10px;
+}
+
+.field-card:hover {
+  background: #eceef1;
+}

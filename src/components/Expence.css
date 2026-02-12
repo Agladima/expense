@@ -100,7 +100,7 @@
   font-size: 1.1rem;
 }
 
-.menu-item:nth-child(4) {
+.menu-item.active {
   background: #fff;
   padding: 10px 20px;
   color: #111;
