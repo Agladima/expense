@@ -1,20 +1,38 @@
 import { useRef, useState } from "react";
 import "./Expence.css";
 import { CiForkAndKnife } from "react-icons/ci";
-import { LuCar, LuUpload } from "react-icons/lu";
+import { LuCar, LuPlane, LuUpload } from "react-icons/lu";
 import { SlPlane } from "react-icons/sl";
 import { FiShoppingBag, FiPaperclip, FiX } from "react-icons/fi";
 import { PiTelegramLogoLight } from "react-icons/pi";
+import { IoLocationOutline, IoTimeOutline } from "react-icons/io5";
+import { BsPeople } from "react-icons/bs";
 
 function Expense() {
+  const [expenseType, setExpenseType] = useState("");
   const [amount, setAmount] = useState("");
   const [project, setProject] = useState("");
   const [description, setDescription] = useState("");
   const [selectedDate, setSelectedDate] = useState("");
   const [uploadedFiles, setUploadedFiles] = useState([]);
+  const [travelPurpose, setTravelPurpose] = useState("");
+  const [fromCity, setFromCity] = useState("");
+  const [toCity, setToCity] = useState("");
+  const [travelDays, setTravelDays] = useState("");
+  const [mealType, setMealType] = useState("");
+  const [attendees, setAttendees] = useState("");
+  const [mealBusinessPurpose, setMealBusinessPurpose] = useState("");
+  const [startLocation, setStartLocation] = useState("");
+  const [endLocation, setEndLocation] = useState("");
+  const [distanceMiles, setDistanceMiles] = useState("");
 
   const today = new Date().toISOString().split("T")[0];
   const dateInputRef = useRef(null);
+  const mileageRate = 0.67;
+  const mileageTotal = (Number.parseFloat(distanceMiles) || 0) * mileageRate;
+  const toggleExpenseType = (type) => {
+    setExpenseType((prevType) => (prevType === type ? "" : type));
+  };
 
   const handleFileUpload = (e) => {
     const files = Array.from(e.target.files);
@@ -49,28 +67,40 @@ function Expense() {
           <h2>Expense Type</h2>
 
           <div className="type-list">
-            <div className="type-item active">
+            <div
+              className={`type-item ${expenseType === "travel" ? "active" : ""}`}
+              onClick={() => toggleExpenseType("travel")}
+            >
               <SlPlane />
               <div>
                 <strong>Travel</strong>
                 <p>Flights, hotels, transportation</p>
               </div>
             </div>
-            <div className="type-item">
+            <div
+              className={`type-item ${expenseType === "meals" ? "active" : ""}`}
+              onClick={() => toggleExpenseType("meals")}
+            >
               <CiForkAndKnife />
               <div>
                 <strong>Meals</strong>
                 <p>Business meals & entertainment</p>
               </div>
             </div>
-            <div className="type-item">
+            <div
+              className={`type-item ${expenseType === "supplies" ? "active" : ""}`}
+              onClick={() => toggleExpenseType("supplies")}
+            >
               <FiShoppingBag />
               <div>
                 <strong>Supplies</strong>
                 <p>Office & work supplies</p>
               </div>
             </div>
-            <div className="type-item">
+            <div
+              className={`type-item ${expenseType === "mileage" ? "active" : ""}`}
+              onClick={() => toggleExpenseType("mileage")}
+            >
               <LuCar />
               <div>
                 <strong>Mileage</strong>
@@ -97,18 +127,193 @@ function Expense() {
             />
           </div>
 
-          <label>Amount</label>
-          <div className="amount-box">
-            <span>$</span>
-            <input
-              type="number"
-              placeholder="0.00"
-              value={amount}
-              onChange={(e) => setAmount(e.target.value)}
-              step="0.01"
-              min="0"
-            />
-          </div>
+          {expenseType === "travel" && (
+            <div className="travel-details-card">
+              <div className="travel-details-title">
+                <LuPlane />
+                <h3>Travel Details</h3>
+              </div>
+
+              <label>Travel Purpose</label>
+              <select
+                value={travelPurpose}
+                onChange={(e) => setTravelPurpose(e.target.value)}
+              >
+                <option value="">Select purpose</option>
+                <option value="client-meeting">Client meeting</option>
+                <option value="conference-training">Conference/Training</option>
+                <option value="site-visit">Site visit</option>
+                <option value="other">Other</option>
+              </select>
+
+              <div className="travel-locations">
+                <div>
+                  <label>From</label>
+                  <div className="location-input">
+                    <IoLocationOutline />
+                    <input
+                      type="text"
+                      placeholder="City"
+                      value={fromCity}
+                      onChange={(e) => setFromCity(e.target.value)}
+                    />
+                  </div>
+                </div>
+                <div>
+                  <label>To</label>
+                  <div className="location-input">
+                    <IoLocationOutline />
+                    <input
+                      type="text"
+                      placeholder="City"
+                      value={toCity}
+                      onChange={(e) => setToCity(e.target.value)}
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <label>Number of Days</label>
+              <div className="days-input">
+                <IoTimeOutline />
+                <input
+                  type="number"
+                  min="1"
+                  placeholder="Number of days"
+                  value={travelDays}
+                  onChange={(e) => setTravelDays(e.target.value)}
+                />
+              </div>
+            </div>
+          )}
+
+          {expenseType === "meals" && (
+            <div className="meal-details-card">
+              <div className="meal-details-title">
+                <CiForkAndKnife />
+                <h3>Meal Details</h3>
+              </div>
+
+              <label>Meal Type</label>
+              <div className="meal-type-options">
+                <button
+                  type="button"
+                  className={`meal-type-btn ${mealType === "breakfast" ? "active" : ""}`}
+                  onClick={() => setMealType("breakfast")}
+                >
+                  Breakfast
+                </button>
+                <button
+                  type="button"
+                  className={`meal-type-btn ${mealType === "lunch" ? "active" : ""}`}
+                  onClick={() => setMealType("lunch")}
+                >
+                  Lunch
+                </button>
+                <button
+                  type="button"
+                  className={`meal-type-btn ${mealType === "dinner" ? "active" : ""}`}
+                  onClick={() => setMealType("dinner")}
+                >
+                  Dinner
+                </button>
+                <button
+                  type="button"
+                  className={`meal-type-btn ${mealType === "client-entertainment" ? "active" : ""}`}
+                  onClick={() => setMealType("client-entertainment")}
+                >
+                  Client Entertainment
+                </button>
+              </div>
+
+              <label>Attendees</label>
+              <div className="attendees-input">
+                <BsPeople />
+                <input
+                  type="text"
+                  placeholder="Names of attendees"
+                  value={attendees}
+                  onChange={(e) => setAttendees(e.target.value)}
+                />
+              </div>
+
+              <label>Business Purpose</label>
+              <textarea
+                placeholder="Describe the business purpose of this meal"
+                value={mealBusinessPurpose}
+                onChange={(e) => setMealBusinessPurpose(e.target.value)}
+                rows="4"
+              />
+            </div>
+          )}
+
+          {expenseType === "mileage" && (
+            <div className="mileage-details-card">
+              <div className="mileage-details-title">
+                <LuCar />
+                <h3>Mileage Details</h3>
+              </div>
+
+              <div className="mileage-locations">
+                <div>
+                  <label>Start Location</label>
+                  <div className="location-input">
+                    <IoLocationOutline />
+                    <input
+                      type="text"
+                      placeholder="From"
+                      value={startLocation}
+                      onChange={(e) => setStartLocation(e.target.value)}
+                    />
+                  </div>
+                </div>
+                <div>
+                  <label>End Location</label>
+                  <div className="location-input">
+                    <IoLocationOutline />
+                    <input
+                      type="text"
+                      placeholder="To"
+                      value={endLocation}
+                      onChange={(e) => setEndLocation(e.target.value)}
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <label>Distance (miles)</label>
+              <input
+                type="number"
+                min="0"
+                step="0.1"
+                placeholder="0.0"
+                value={distanceMiles}
+                onChange={(e) => setDistanceMiles(e.target.value)}
+              />
+
+              <div className="mileage-summary-field">
+                <span className="mileage-rate-text">Rate: $0.67/mile</span>
+                <span className="mileage-total">${mileageTotal.toFixed(2)}</span>
+              </div>
+            </div>
+          )}
+
+          {expenseType !== "mileage" && (
+            <>
+              <label>Amount</label>
+              <div className="amount-box">
+                <span>$</span>
+                <input
+                  type="number"
+                  placeholder="0.00"
+                  value={amount}
+                  onChange={(e) => setAmount(e.target.value)}
+                  step="0.01"
+                  min="0"
+                />
+              </div>
+            </>
+          )}
 
           <label>Project / Cost Center</label>
           <select value={project} onChange={(e) => setProject(e.target.value)}>

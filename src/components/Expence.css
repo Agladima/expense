@@ -14,6 +14,10 @@
   z-index: 1000;
 }
 
+.main-nav .nav-container {
+  height: 100%;
+}
+
 .nav-container {
   max-width: 900px;
   margin: auto;
@@ -61,7 +65,12 @@
 }
 
 .sub-nav {
-  margin-top: 64px;
+  position: fixed;
+  top: 64px;
+  left: 0;
+  right: 0;
+  z-index: 999;
+  background: #fff;
   padding: 0.75rem 0;
   display: flex;
   justify-content: center;
@@ -69,7 +78,7 @@
 }
 
 .sub-nav .nav-container {
-  background: #f6f7f9;
+  background: #e0e6eb;
   border-radius: 10px;
   padding: 0.6rem 2rem;
   justify-content: center;
@@ -88,7 +97,8 @@
   align-items: center;
   gap: 0.4rem;
   font-size: 0.9rem;
-  color: #9bb7a7;
+  color: #808080;
+  text-decoration: none;
   cursor: pointer;
   white-space: nowrap;
   padding: 0.35rem 0.75rem;
@@ -103,14 +113,14 @@
 .menu-item.active {
   background: #fff;
   padding: 10px 20px;
-  color: #111;
+  color: #808080;
   font-weight: 600;
   border-radius: 10px;
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
 }
 
 .menu-item:not(:nth-child(4)):hover {
-  color: #6f9f88;
+  color: #808080;
 }
 
 .page-bg {
@@ -118,7 +128,7 @@
   background: #f6f7f9;
   display: flex;
   justify-content: center;
-  padding: 40px 16px;
+  padding: 92px 16px 40px;
 }
 
 .expense-form-card {
@@ -152,10 +162,16 @@
 .type-item {
   border: 1px solid #e4e6ea;
   border-radius: 10px;
-  padding: 12px;
+  padding: 16px 12px;
+  min-height: 92px;
   cursor: pointer;
   transition: 0.2s;
   background: #f6f7f9;
+}
+
+.type-item.active {
+  border-color: #2c9a89;
+  background: #eef8f6;
 }
 
 .type-item h4 {
@@ -170,7 +186,7 @@
 
 .date-display {
   background: #f2f3f5;
-  padding: 12px;
+  padding: 14px 12px;
   border-radius: 8px;
   font-size: 14px;
 }
@@ -192,7 +208,7 @@
 .amount-box input {
   border: none;
   outline: none;
-  padding: 10px 0;
+  padding: 12px 0;
   width: 100%;
   background: #f6f7f9;
 }
@@ -200,7 +216,7 @@
 select,
 textarea {
   width: 100%;
-  padding: 10px;
+  padding: 12px;
   border-radius: 8px;
   border: 1px solid #e4e6ea;
   outline: none;
@@ -208,19 +224,301 @@ textarea {
 }
 
 textarea {
-  min-height: 90px;
+  min-height: 104px;
   resize: none;
+}
+
+.travel-details-card input[type="text"],
+.travel-details-card input[type="number"] {
+  width: 100%;
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid #e4e6ea;
+  outline: none;
+  background: #f6f7f9;
+}
+
+.travel-details-card {
+  margin-top: 14px;
+  border: 1px solid #e4e6ea;
+  border-radius: 10px;
+  background: #eef8f6;
+  padding: 14px;
+}
+
+.travel-details-card h3 {
+  font-size: 15px;
+  margin: 0;
+  font-weight: 400;
+  color: #2c9a89;
+}
+
+.travel-details-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.travel-details-title svg {
+  color: #2c9a89;
+  font-size: 16px;
+}
+
+.meal-details-card {
+  margin-top: 14px;
+  border: 1px solid #e4e6ea;
+  border-radius: 10px;
+  background: #eef8f6;
+  padding: 14px;
+}
+
+.meal-details-card h3 {
+  font-size: 15px;
+  margin: 0;
+  font-weight: 400;
+  color: #2c9a89;
+}
+
+.meal-details-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.meal-details-title svg {
+  color: #2c9a89;
+  font-size: 16px;
+}
+
+.mileage-details-card {
+  margin-top: 14px;
+  border: 1px solid #e4e6ea;
+  border-radius: 10px;
+  background: #eef8f6;
+  padding: 14px;
+}
+
+.mileage-details-card h3 {
+  font-size: 15px;
+  margin: 0;
+  font-weight: 400;
+  color: #2c9a89;
+}
+
+.mileage-details-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.mileage-details-title svg {
+  color: #2c9a89;
+  font-size: 16px;
+}
+
+.mileage-details-card input[type="text"],
+.mileage-details-card input[type="number"] {
+  width: 100%;
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid #e4e6ea;
+  outline: none;
+  background: #f6f7f9;
+}
+
+.mileage-locations {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.mileage-summary-field {
+  margin-top: 12px;
+  border: 1px solid #e4e6ea;
+  border-radius: 8px;
+  background: #f6f7f9;
+  padding: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.mileage-rate-text {
+  color: #666;
+  font-weight: 600;
+}
+
+.mileage-total {
+  color: #2c9a89;
+  font-weight: 700;
+}
+
+.meal-details-card input[type="text"] {
+  width: 100%;
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid #e4e6ea;
+  outline: none;
+  background: #f6f7f9;
+}
+
+.attendees-input {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: 0 10px;
+  border: 1px solid #e4e6ea;
+  border-radius: 8px;
+  background: #f6f7f9;
+}
+
+.attendees-input svg {
+  color: #7a8694;
+  font-size: 16px;
+  flex-shrink: 0;
+}
+
+.attendees-input input {
+  border: none;
+  background: transparent;
+  padding: 12px 0 12px 8px;
+}
+
+.meal-details-card .attendees-input input[type="text"] {
+  border: none;
+  background: transparent;
+  padding: 12px 0 12px 8px;
+  width: 100%;
+}
+
+.meal-details-card textarea {
+  width: 100%;
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid #e4e6ea;
+  outline: none;
+  background: #f6f7f9;
+  min-height: 108px;
+  resize: vertical;
+}
+
+.meal-type-options {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.meal-type-btn {
+  border: 1px solid #d8dde3;
+  background: #f6f7f9;
+  color: #555;
+  border-radius: 8px;
+  padding: 10px 12px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.meal-type-btn:hover {
+  background: #eceef1;
+}
+
+.meal-type-btn.active {
+  background: #2c9a89;
+  border-color: #2c9a89;
+  color: #fff;
+}
+
+.travel-locations {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.location-input {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: 0 10px;
+  border: 1px solid #e4e6ea;
+  border-radius: 8px;
+  background: #f6f7f9;
+}
+
+.location-input svg {
+  color: #7a8694;
+  font-size: 16px;
+  flex-shrink: 0;
+}
+
+.location-input input {
+  border: none;
+  background: transparent;
+  padding: 12px 0 12px 8px;
+}
+
+.travel-details-card .location-input input[type="text"] {
+  border: none;
+  background: transparent;
+  padding: 12px 0 12px 8px;
+  width: 100%;
+}
+
+.mileage-details-card .location-input input[type="text"] {
+  border: none;
+  background: transparent;
+  padding: 12px 0 12px 8px;
+  width: 100%;
+}
+
+.days-input {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: 0 10px;
+  border: 1px solid #e4e6ea;
+  border-radius: 8px;
+  background: #f6f7f9;
+}
+
+.days-input svg {
+  color: #7a8694;
+  font-size: 16px;
+  flex-shrink: 0;
+}
+
+.days-input input {
+  border: none;
+  background: transparent;
+  padding: 12px 0 12px 8px;
+}
+
+.travel-details-card .days-input input[type="number"] {
+  border: none;
+  background: transparent;
+  padding: 12px 0 12px 8px;
+  width: 100%;
 }
 
 .upload-area {
   border: 2px dashed #dcdcdc;
   border-radius: 10px;
-  padding: 18px;
+  padding: 24px 18px;
+  min-height: 150px;
   text-align: center;
   position: relative;
   font-size: 14px;
   color: #555;
   background: #f6f7f9;
+}
+
+.upload-icon {
+  font-size: 32px;
 }
 
 .upload-area span {
@@ -240,25 +538,38 @@ textarea {
 .workflow {
   display: flex;
   justify-content: space-between;
+  gap: 0;
   margin-top: 14px;
+  border: 1px solid #e4e6ea;
+  border-radius: 10px;
+  background: #f6f7f9;
+  overflow: hidden;
 }
 
 .workflow-step {
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
   font-size: 12px;
   color: #777;
   flex: 1;
+  background: transparent;
+  padding: 10px 8px;
+  min-height: 82px;
   position: relative;
+}
+
+.workflow-step:last-child {
+  border-right: none;
 }
 
 .workflow-step:not(:last-child)::after {
   content: "";
   position: absolute;
-  top: 13px;
-  right: -50%;
-  width: 100%;
+  top: 24px;
+  left: calc(50% + 28px);
+  width: calc(100% - 56px);
   height: 2px;
   background: #e6e6e6;
   z-index: 0;
@@ -284,13 +595,19 @@ textarea {
 }
 
 .workflow-step.active .step-circle {
-  background: #2c9a89;
-  color: #fff;
+  background: #f5fcfa;
+  color: #2c9a89;
+  border: 3px solid #2c9a89;
+  box-shadow: none;
 }
 
 .workflow-step.active .step-label {
   color: #2c9a89;
   font-weight: 600;
+}
+
+.workflow-step.active {
+  background: transparent;
 }
 
 .step {
@@ -348,7 +665,7 @@ textarea {
 
 .date-display.dropdown {
   background: #f2f3f5;
-  padding: 12px;
+  padding: 14px 12px;
   border-radius: 8px;
   font-size: 14px;
   cursor: pointer;
@@ -426,5 +743,17 @@ textarea {
 
   .menu-item svg {
     font-size: 1.4rem;
+  }
+
+  .travel-locations {
+    grid-template-columns: 1fr;
+  }
+
+  .meal-type-options {
+    grid-template-columns: 1fr;
+  }
+
+  .mileage-locations {
+    grid-template-columns: 1fr;
   }
 }

@@ -4,9 +4,12 @@ import { IoTimeOutline } from "react-icons/io5";
 import { CiStar } from "react-icons/ci";
 import { MdOutlineTask } from "react-icons/md";
 import { LuClipboardList, LuSettings2 } from "react-icons/lu";
-import { NavLink, Outlet } from "react-router-dom";
+import { NavLink, Outlet, useLocation } from "react-router-dom";
 
 function Layout() {
+  const location = useLocation();
+  const isBuilderPage = location.pathname.startsWith("/builder");
+
   return (
     <>
       {/* ================= MAIN NAV ================= */}
@@ -14,11 +17,13 @@ function Layout() {
         <div className="nav-container">
           <div className="nav-left">
             <div className="icon-badge">
-              <RiMoneyDollarBoxLine />
+              {isBuilderPage ? <LuSettings2 /> : <RiMoneyDollarBoxLine />}
             </div>
             <div>
-              <h2>Expense Claim</h2>
-              <p>Manage Your Forms</p>
+              <h2>{isBuilderPage ? "Form Builder" : "Expense Claim"}</h2>
+              <p>
+                {isBuilderPage ? "Create custom forms" : "Manage Your Forms"}
+              </p>
             </div>
           </div>
 
