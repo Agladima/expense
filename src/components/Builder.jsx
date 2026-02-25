@@ -115,14 +115,11 @@ function Builder() {
             <div className="form-meta">
               <div className="form-name">
                 <label>Form Name</label>
-                <input type="text" placeholder="My Custom Form" />
+                <input type="text" placeholder="Enter form name" />
               </div>
               <div className="form-desc">
                 <label>Form Description</label>
-                <input
-                  type="text"
-                  placeholder="A form built with the custom form builder"
-                />
+                <input type="text" placeholder="Brief Description" />
               </div>
             </div>
 
