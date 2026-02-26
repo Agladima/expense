@@ -24,6 +24,10 @@ function Builder() {
   const [ruleMenuOpen, setRuleMenuOpen] = useState({});
   const [conditionalExpanded, setConditionalExpanded] = useState({});
   const [conditionalEnabled, setConditionalEnabled] = useState({});
+  const [conditionalAction, setConditionalAction] = useState({});
+  const [conditionalField, setConditionalField] = useState({});
+  const [conditionalCondition, setConditionalCondition] = useState({});
+  const [conditionalValue, setConditionalValue] = useState({});
   const FIELD_TYPES = [
     {
       id: "text",
@@ -111,6 +115,26 @@ function Builder() {
       return next;
     });
     setConditionalEnabled((prev) => {
+      const next = { ...prev };
+      delete next[id];
+      return next;
+    });
+    setConditionalAction((prev) => {
+      const next = { ...prev };
+      delete next[id];
+      return next;
+    });
+    setConditionalField((prev) => {
+      const next = { ...prev };
+      delete next[id];
+      return next;
+    });
+    setConditionalCondition((prev) => {
+      const next = { ...prev };
+      delete next[id];
+      return next;
+    });
+    setConditionalValue((prev) => {
       const next = { ...prev };
       delete next[id];
       return next;
@@ -379,6 +403,96 @@ function Builder() {
                                   <span className="slider" />
                                 </label>
                               </div>
+
+                              {conditionalEnabled[field.id] && (
+                                <div className="conditional-config-card">
+                                  <div className="field-input-stack">
+                                    <label>Action</label>
+                                    <select
+                                      className="field-input field-select"
+                                      value={
+                                        conditionalAction[field.id] ||
+                                        "show-this-field"
+                                      }
+                                      onChange={(e) =>
+                                        setConditionalAction((prev) => ({
+                                          ...prev,
+                                          [field.id]: e.target.value,
+                                        }))
+                                      }
+                                    >
+                                      <option value="show-this-field">
+                                        Show this field
+                                      </option>
+                                      <option value="hide-this-field">
+                                        Hide this field
+                                      </option>
+                                    </select>
+                                  </div>
+
+                                  <p className="conditional-helper">When...</p>
+
+                                  <div className="field-input-stack">
+                                    <label>Field</label>
+                                    <select
+                                      className="field-input field-select"
+                                      value={conditionalField[field.id] || ""}
+                                      onChange={(e) =>
+                                        setConditionalField((prev) => ({
+                                          ...prev,
+                                          [field.id]: e.target.value,
+                                        }))
+                                      }
+                                    >
+                                      <option value="">Select field</option>
+                                      <option value="text">Text Field</option>
+                                      <option value="email">Email Field</option>
+                                      <option value="number">Number Field</option>
+                                    </select>
+                                  </div>
+
+                                  <div className="field-input-stack">
+                                    <label>Condition</label>
+                                    <select
+                                      className="field-input field-select"
+                                      value={conditionalCondition[field.id] || ""}
+                                      onChange={(e) =>
+                                        setConditionalCondition((prev) => ({
+                                          ...prev,
+                                          [field.id]: e.target.value,
+                                        }))
+                                      }
+                                    >
+                                      <option value="">Select condition</option>
+                                      <option value="equals">Equals</option>
+                                      <option value="not-equals">
+                                        Does not equal
+                                      </option>
+                                      <option value="contains">Contains</option>
+                                      <option value="is-empty">Is empty</option>
+                                      <option value="is-not-empty">
+                                        Is not empty
+                                      </option>
+                                    </select>
+                                  </div>
+
+                                  <div className="field-input-stack">
+                                    <label>Value</label>
+                                    <input
+                                      type="text"
+                                      className="field-input"
+                                      placeholder="Comparison value"
+                                      value={conditionalValue[field.id] || ""}
+                                      onChange={(e) =>
+                                        setConditionalValue((prev) => ({
+                                          ...prev,
+                                          [field.id]: e.target.value,
+                                        }))
+                                      }
+                                    />
+                                  </div>
+                                </div>
+                              )}
                             </div>
                           )}
                         </div>
