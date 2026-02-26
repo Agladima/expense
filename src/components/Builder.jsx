@@ -19,6 +19,11 @@ function Builder() {
   const [showFieldSelector, setShowFieldSelector] = useState(false);
   const [formFields, setFormFields] = useState([]);
   const [expandedFieldId, setExpandedFieldId] = useState(null);
+  const [validationExpanded, setValidationExpanded] = useState({});
+  const [requiredMap, setRequiredMap] = useState({});
+  const [ruleMenuOpen, setRuleMenuOpen] = useState({});
+  const [conditionalExpanded, setConditionalExpanded] = useState({});
+  const [conditionalEnabled, setConditionalEnabled] = useState({});
   const FIELD_TYPES = [
     {
       id: "text",
@@ -85,6 +90,31 @@ function Builder() {
   const handleDeleteField = (id) => {
     setFormFields((prev) => prev.filter((field) => field.id !== id));
     setExpandedFieldId((prev) => (prev === id ? null : prev));
+    setValidationExpanded((prev) => {
+      const next = { ...prev };
+      delete next[id];
+      return next;
+    });
+    setRequiredMap((prev) => {
+      const next = { ...prev };
+      delete next[id];
+      return next;
+    });
+    setRuleMenuOpen((prev) => {
+      const next = { ...prev };
+      delete next[id];
+      return next;
+    });
+    setConditionalExpanded((prev) => {
+      const next = { ...prev };
+      delete next[id];
+      return next;
+    });
+    setConditionalEnabled((prev) => {
+      const next = { ...prev };
+      delete next[id];
+      return next;
+    });
   };
 
   return (
@@ -237,6 +267,120 @@ function Builder() {
                               className="field-input"
                             />
                           </div>
+                          <div className="field-input-stack">
+                            <label>Field Width</label>
+                            <select className="field-input field-select">
+                              <option>Full Width</option>
+                              <option>Half Width</option>
+                            </select>
+                          </div>
+
+                          <div className="validation-header">
+                            <span>
+                              Validation Rules (
+                              {requiredMap[field.id] ? 1 : 0})
+                            </span>
+                            <button
+                              type="button"
+                              className="field-action-btn"
+                              onClick={() =>
+                                setValidationExpanded((prev) => ({
+                                  ...prev,
+                                  [field.id]: !prev[field.id],
+                                }))
+                              }
+                            >
+                              <IoIosArrowDown />
+                            </button>
+                          </div>
+
+                          {validationExpanded[field.id] && (
+                            <div className="validation-body">
+                              <div className="validation-row">
+                                <span>Required Field</span>
+                                <label className="switch">
+                                  <input
+                                    type="checkbox"
+                                    checked={!!requiredMap[field.id]}
+                                    onChange={(e) =>
+                                      setRequiredMap((prev) => ({
+                                        ...prev,
+                                        [field.id]: e.target.checked,
+                                      }))
+                                    }
+                                  />
+                                  <span className="slider" />
+                                </label>
+                              </div>
+
+                              <div className="validation-add">
+                                <span>Add Validation rule...</span>
+                                <button
+                                  type="button"
+                                  className="field-action-btn"
+                                  onClick={() =>
+                                    setRuleMenuOpen((prev) => ({
+                                      ...prev,
+                                      [field.id]: !prev[field.id],
+                                    }))
+                                  }
+                                >
+                                  <IoIosArrowDown />
+                                </button>
+                              </div>
+
+                              {ruleMenuOpen[field.id] && (
+                                <div className="validation-menu">
+                                  <div className="validation-option">
+                                    Min Length
+                                  </div>
+                                  <div className="validation-option">
+                                    Max Length
+                                  </div>
+                                  <div className="validation-option">
+                                    Pattern (Regex)
+                                  </div>
+                                </div>
+                              )}
+                            </div>
+                          )}
+
+                          <div className="conditional-header">
+                            <span>Conditional Logic</span>
+                            <button
+                              type="button"
+                              className="field-action-btn"
+                              onClick={() =>
+                                setConditionalExpanded((prev) => ({
+                                  ...prev,
+                                  [field.id]: !prev[field.id],
+                                }))
+                              }
+                            >
+                              <IoIosArrowDown />
+                            </button>
+                          </div>
+
+                          {conditionalExpanded[field.id] && (
+                            <div className="conditional-body">
+                              <div className="conditional-row">
+                                <span>Enable Conditional Logic</span>
+                                <label className="switch">
+                                  <input
+                                    type="checkbox"
+                                    checked={!!conditionalEnabled[field.id]}
+                                    onChange={(e) =>
+                                      setConditionalEnabled((prev) => ({
+                                        ...prev,
+                                        [field.id]: e.target.checked,
+                                      }))
+                                    }
+                                  />
+                                  <span className="slider" />
+                                </label>
+                              </div>
+                            </div>
+                          )}
                         </div>
                       )}
                     </div>
