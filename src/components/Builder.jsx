@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import "./Builder.css";
 import { IoEyeOutline } from "react-icons/io5";
 import { FiSave } from "react-icons/fi";
@@ -9,10 +9,11 @@ import { GrTextAlignLeft } from "react-icons/gr";
 import { IoIosArrowDown } from "react-icons/io";
 import { FiCheckSquare } from "react-icons/fi";
 import { MdOutlineFileUpload, MdOutlineEmail } from "react-icons/md";
-import { LuHash } from "react-icons/lu";
+import { LuHash, LuSettings2 } from "react-icons/lu";
 import { RiDeleteBinLine } from "react-icons/ri";
 import { FaAngleUp } from "react-icons/fa6";
 import { LuGripVertical } from "react-icons/lu";
+import { FaCheckCircle } from "react-icons/fa";
 
 function Builder() {
   const [isPreview, setIsPreview] = useState(false);
@@ -28,6 +29,10 @@ function Builder() {
   const [conditionalField, setConditionalField] = useState({});
   const [conditionalCondition, setConditionalCondition] = useState({});
   const [conditionalValue, setConditionalValue] = useState({});
+  const [defaultValueMap, setDefaultValueMap] = useState({});
+  const [showToast, setShowToast] = useState(false);
+  const [toastMessage, setToastMessage] = useState("");
+  const toastTimeoutRef = useRef(null);
   const FIELD_TYPES = [
     {
       id: "text",
@@ -89,6 +94,7 @@ function Builder() {
       },
     ]);
     setShowFieldSelector(false);
+    triggerToast(`${field.title} field added`);
   };
 
   const handleDeleteField = (id) => {
@@ -139,7 +145,54 @@ function Builder() {
       delete next[id];
       return next;
     });
+    setDefaultValueMap((prev) => {
+      const next = { ...prev };
+      delete next[id];
+      return next;
+    });
+    triggerToast("Field removed");
   };
+
+  const handleClearAll = () => {
+    setFormFields([]);
+    setExpandedFieldId(null);
+    setShowFieldSelector(false);
+    setValidationExpanded({});
+    setRequiredMap({});
+    setRuleMenuOpen({});
+    setConditionalExpanded({});
+    setConditionalEnabled({});
+    setConditionalAction({});
+    setConditionalField({});
+    setConditionalCondition({});
+    setConditionalValue({});
+    setDefaultValueMap({});
+  };
+
+  const handleSave = () => {
+    triggerToast("Form save successfully");
+  };
+
+  const triggerToast = (message) => {
+    setToastMessage(message);
+    setShowToast(true);
+    if (toastTimeoutRef.current) {
+      clearTimeout(toastTimeoutRef.current);
+    }
+    toastTimeoutRef.current = setTimeout(() => {
+      setShowToast(false);
+      toastTimeoutRef.current = null;
+    }, 2200);
+  };
+
+  const totalFields = formFields.length;
+  const requiredCount = formFields.filter((field) => requiredMap[field.id]).length;
+  const conditionalCount = formFields.filter(
+    (field) => conditionalEnabled[field.id],
+  ).length;
+  const prePopulatedCount = formFields.filter(
+    (field) => (defaultValueMap[field.id] || "").trim() !== "",
+  ).length;
 
   return (
     <div className="page-bg">
@@ -155,7 +208,7 @@ function Builder() {
                 >
                   <IoEyeOutline className="icon-inline" /> Preview
                 </button>
-                <button className="save-btn">
+                <button className="save-btn" onClick={handleSave}>
                   <FiSave className="icon-inline" /> Save
                 </button>
               </>
@@ -204,6 +257,16 @@ function Builder() {
             <div className="fields-section">
               <div className="fields-header">
                 <span>Fields ({formFields.length})</span>
+                {totalFields > 0 && (
+                  <button
+                    type="button"
+                    className="clear-all-btn"
+                    onClick={handleClearAll}
+                  >
+                    <RiDeleteBinLine />
+                    <span>Clear All</span>
+                  </button>
+                )}
               </div>
 
               {formFields.length === 0 ? (
@@ -289,6 +352,13 @@ function Builder() {
                               type="text"
                               placeholder="Default value"
                               className="field-input"
+                              value={defaultValueMap[field.id] || ""}
+                              onChange={(e) =>
+                                setDefaultValueMap((prev) => ({
+                                  ...prev,
+                                  [field.id]: e.target.value,
+                                }))
+                              }
                             />
                           </div>
                           <div className="field-input-stack">
@@ -300,7 +370,8 @@ function Builder() {
                           </div>
 
                           <div className="validation-header">
-                            <span>
+                            <span className="section-header-label">
+                              <LuSettings2 />
                               Validation Rules (
                               {requiredMap[field.id] ? 1 : 0})
                             </span>
@@ -370,7 +441,10 @@ function Builder() {
                           )}
 
                           <div className="conditional-header">
-                            <span>Conditional Logic</span>
+                            <span className="section-header-label">
+                              <LuSettings2 />
+                              Conditional Logic
+                            </span>
                             <button
                               type="button"
                               className="field-action-btn"
@@ -507,6 +581,28 @@ function Builder() {
                   >
                     Add Field
                   </button>
+
+                  <div className="builder-summary-card">
+                    <span>
+                      <span className="summary-value">{totalFields}</span> fields
+                    </span>
+                    <span className="summary-dot">•</span>
+                    <span>
+                      <span className="summary-value">{requiredCount}</span>{" "}
+                      required
+                    </span>
+                    <span className="summary-dot">•</span>
+                    <span>
+                      <span className="summary-value">{conditionalCount}</span>{" "}
+                      with conditional logic
+                    </span>
+                    <span className="summary-dot">•</span>
+                    <span>
+                      <span className="summary-value">{prePopulatedCount}</span>{" "}
+                      pre-populated
+                    </span>
+                  </div>
+
                 </>
               )}
 
@@ -540,9 +636,24 @@ function Builder() {
                 </div>
               )}
             </div>
+
           </>
         )}
       </div>
+
+      {totalFields > 0 && (
+        <p className="builder-help-line">
+          Drag fields to reorder <span className="summary-dot">•</span> Click to
+          expand and edit settings
+        </p>
+      )}
+
+      {showToast && (
+        <div className="save-toast">
+          <FaCheckCircle />
+          <span>{toastMessage}</span>
+        </div>
+      )}
     </div>
   );
 }
