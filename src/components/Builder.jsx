@@ -10,10 +10,15 @@ import { IoIosArrowDown } from "react-icons/io";
 import { FiCheckSquare } from "react-icons/fi";
 import { MdOutlineFileUpload, MdOutlineEmail } from "react-icons/md";
 import { LuHash } from "react-icons/lu";
+import { RiDeleteBinLine } from "react-icons/ri";
+import { FaAngleUp } from "react-icons/fa6";
+import { LuGripVertical } from "react-icons/lu";
 
 function Builder() {
   const [isPreview, setIsPreview] = useState(false);
   const [showFieldSelector, setShowFieldSelector] = useState(false);
+  const [formFields, setFormFields] = useState([]);
+  const [expandedFieldId, setExpandedFieldId] = useState(null);
   const FIELD_TYPES = [
     {
       id: "text",
@@ -64,6 +69,23 @@ function Builder() {
       icon: MdOutlineEmail,
     },
   ];
+
+  const handleFieldTypeSelect = (field) => {
+    setFormFields((prev) => [
+      ...prev,
+      {
+        id: Date.now() + Math.random(),
+        label: `New ${field.title} Field`,
+        typeLabel: field.title,
+      },
+    ]);
+    setShowFieldSelector(false);
+  };
+
+  const handleDeleteField = (id) => {
+    setFormFields((prev) => prev.filter((field) => field.id !== id));
+    setExpandedFieldId((prev) => (prev === id ? null : prev));
+  };
 
   return (
     <div className="page-bg">
@@ -127,17 +149,108 @@ function Builder() {
 
             <div className="fields-section">
               <div className="fields-header">
-                <span>Fields (0)</span>
+                <span>Fields ({formFields.length})</span>
               </div>
-              <div className="drag-drop">
-                <p className="field-p">No fields added yet</p>
-                <button
-                  className="field-card"
-                  onClick={() => setShowFieldSelector(true)}
-                >
-                  <FaPlus className="icon-inline" /> Add your first field
-                </button>
-              </div>
+
+              {formFields.length === 0 ? (
+                <div className="drag-drop">
+                  <p className="field-p">No fields added yet</p>
+                  <button
+                    className="field-card"
+                    onClick={() => setShowFieldSelector(true)}
+                  >
+                    <FaPlus className="icon-inline" /> Add your first field
+                  </button>
+                </div>
+              ) : (
+                <>
+                  {formFields.map((field) => (
+                    <div key={field.id} className="added-field-card">
+                      <div className="added-field-header">
+                        <div className="added-field-left">
+                          <h4 className="added-field-title">
+                            <LuGripVertical />
+                            {field.label}
+                          </h4>
+                          <p>{field.typeLabel}</p>
+                        </div>
+                        <div className="added-field-actions">
+                          <button
+                            type="button"
+                            className="field-action-btn"
+                            onClick={() =>
+                              setExpandedFieldId((prev) =>
+                                prev === field.id ? null : field.id,
+                              )
+                            }
+                          >
+                            {expandedFieldId === field.id ? (
+                              <FaAngleUp />
+                            ) : (
+                              <IoIosArrowDown />
+                            )}
+                          </button>
+                          <button
+                            type="button"
+                            className="field-action-btn delete"
+                            onClick={() => handleDeleteField(field.id)}
+                          >
+                            <RiDeleteBinLine />
+                          </button>
+                        </div>
+                      </div>
+
+                      {expandedFieldId === field.id && (
+                        <div className="added-field-body">
+                          <div className="added-field-divider" />
+                          <div className="field-input-grid">
+                            <div>
+                              <label>Label</label>
+                              <input
+                                type="text"
+                                placeholder="Field label"
+                                className="field-input"
+                              />
+                            </div>
+                            <div>
+                              <label>Placeholder</label>
+                              <input
+                                type="text"
+                                placeholder="Placeholder text"
+                                className="field-input"
+                              />
+                            </div>
+                          </div>
+                          <div className="field-input-stack">
+                            <label>Help Text</label>
+                            <input
+                              type="text"
+                              placeholder="Additional instructions for users"
+                              className="field-input"
+                            />
+                          </div>
+                          <div className="field-input-stack">
+                            <label>Default Value (Pre-populated)</label>
+                            <input
+                              type="text"
+                              placeholder="Default value"
+                              className="field-input"
+                            />
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  ))}
+
+                  <button
+                    type="button"
+                    className="add-field-trigger"
+                    onClick={() => setShowFieldSelector(true)}
+                  >
+                    Add Field
+                  </button>
+                </>
+              )}
 
               {showFieldSelector && (
                 <div className="field-selector-card">
@@ -154,7 +267,11 @@ function Builder() {
                     {FIELD_TYPES.map((field) => {
                       const Icon = field.icon;
                       return (
-                        <div key={field.id} className="field-option">
+                        <div
+                          key={field.id}
+                          className="field-option"
+                          onClick={() => handleFieldTypeSelect(field)}
+                        >
                           <Icon className="field-option-icon" />
                           <h3>{field.title}</h3>
                           <p>{field.description}</p>
