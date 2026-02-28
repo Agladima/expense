@@ -629,7 +629,7 @@
 
 @media (max-width: 768px) {
   .page-bg {
-    padding: 24px 12px;
+    padding: 112px 12px 24px;
   }
 
   .builder-card {

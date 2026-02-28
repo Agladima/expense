@@ -333,9 +333,7 @@ function Expense() {
             rows="4"
           />
 
-          <label>
-            Receipt Upload <span className="required">*</span>
-          </label>
+          <label>Receipt Upload</label>
 
           <label className="upload-area">
             <input
