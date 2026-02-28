@@ -113,7 +113,15 @@ function Expense() {
           <div className="date-input-container">
             <div
               className="date-display dropdown"
-              onClick={() => dateInputRef.current.showPicker()}
+              onClick={() => {
+                if (!dateInputRef.current) return;
+                if (typeof dateInputRef.current.showPicker === "function") {
+                  dateInputRef.current.showPicker();
+                } else {
+                  dateInputRef.current.focus();
+                  dateInputRef.current.click();
+                }
+              }}
             >
               {formatDateDisplay(selectedDate)}
             </div>
