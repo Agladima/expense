@@ -89,12 +89,18 @@ function Builder() {
       ...prev,
       {
         id: Date.now() + Math.random(),
-        label: `New ${field.title} Field`,
+        label: "",
         typeLabel: field.title,
       },
     ]);
     setShowFieldSelector(false);
     triggerToast(`${field.title} field added`);
+  };
+
+  const handleFieldLabelChange = (id, value) => {
+    setFormFields((prev) =>
+      prev.map((field) => (field.id === id ? { ...field, label: value } : field)),
+    );
   };
 
   const handleDeleteField = (id) => {
@@ -287,7 +293,7 @@ function Builder() {
                         <div className="added-field-left">
                           <h4 className="added-field-title">
                             <LuGripVertical />
-                            {field.label}
+                            {field.label.trim() || "Untittled Field"}
                           </h4>
                           <p>{field.typeLabel}</p>
                         </div>
@@ -327,6 +333,10 @@ function Builder() {
                                 type="text"
                                 placeholder="Field label"
                                 className="field-input"
+                                value={field.label}
+                                onChange={(e) =>
+                                  handleFieldLabelChange(field.id, e.target.value)
+                                }
                               />
                             </div>
                             <div>
