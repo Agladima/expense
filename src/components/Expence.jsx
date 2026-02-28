@@ -50,7 +50,7 @@ function Expense() {
   };
 
   const formatDateDisplay = (dateString) => {
-    if (!dateString) return "Select expense date";
+    if (!dateString) return "MM/DD/YYYY";
     const date = new Date(dateString);
     return date.toLocaleDateString("en-US", {
       weekday: "long",

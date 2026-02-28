@@ -664,12 +664,7 @@ textarea {
 }
 
 .date-display.dropdown {
-  background: #f2f3f5;
-  padding: 14px 12px;
-  border-radius: 8px;
-  font-size: 14px;
-  cursor: pointer;
-  border: 1px solid #e4e6ea;
+  display: none;
 }
 
 .date-display.dropdown:hover {
@@ -677,10 +672,18 @@ textarea {
 }
 
 .date-picker {
-  position: absolute;
-  inset: 0;
-  opacity: 0;
-  pointer-events: none;
+  position: static;
+  inset: auto;
+  opacity: 1;
+  pointer-events: auto;
+  z-index: auto;
+  cursor: pointer;
+  width: 100%;
+  padding: 14px 12px;
+  border-radius: 8px;
+  border: 1px solid #e4e6ea;
+  background: #f2f3f5;
+  color: #111827;
 }
 .required {
   color: #e53935;
@@ -725,6 +728,7 @@ textarea {
   .expense-form-card {
     margin-top: 12px;
   }
+
 }
 
 @media (max-width: 600px) {
