@@ -99,7 +99,9 @@ function Builder() {
 
   const handleFieldLabelChange = (id, value) => {
     setFormFields((prev) =>
-      prev.map((field) => (field.id === id ? { ...field, label: value } : field)),
+      prev.map((field) =>
+        field.id === id ? { ...field, label: value } : field,
+      ),
     );
   };
 
@@ -192,7 +194,9 @@ function Builder() {
   };
 
   const totalFields = formFields.length;
-  const requiredCount = formFields.filter((field) => requiredMap[field.id]).length;
+  const requiredCount = formFields.filter(
+    (field) => requiredMap[field.id],
+  ).length;
   const conditionalCount = formFields.filter(
     (field) => conditionalEnabled[field.id],
   ).length;
@@ -335,7 +339,10 @@ function Builder() {
                                 className="field-input"
                                 value={field.label}
                                 onChange={(e) =>
-                                  handleFieldLabelChange(field.id, e.target.value)
+                                  handleFieldLabelChange(
+                                    field.id,
+                                    e.target.value,
+                                  )
                                 }
                               />
                             </div>
@@ -382,8 +389,7 @@ function Builder() {
                           <div className="validation-header">
                             <span className="section-header-label">
                               <LuSettings2 />
-                              Validation Rules (
-                              {requiredMap[field.id] ? 1 : 0})
+                              Validation Rules ({requiredMap[field.id] ? 1 : 0})
                             </span>
                             <button
                               type="button"
@@ -531,7 +537,9 @@ function Builder() {
                                       <option value="">Select field</option>
                                       <option value="text">Text Field</option>
                                       <option value="email">Email Field</option>
-                                      <option value="number">Number Field</option>
+                                      <option value="number">
+                                        Number Field
+                                      </option>
                                     </select>
                                   </div>
 
@@ -539,7 +547,9 @@ function Builder() {
                                     <label>Condition</label>
                                     <select
                                       className="field-input field-select"
-                                      value={conditionalCondition[field.id] || ""}
+                                      value={
+                                        conditionalCondition[field.id] || ""
+                                      }
                                       onChange={(e) =>
                                         setConditionalCondition((prev) => ({
                                           ...prev,
@@ -594,7 +604,8 @@ function Builder() {
 
                   <div className="builder-summary-card">
                     <span>
-                      <span className="summary-value">{totalFields}</span> fields
+                      <span className="summary-value">{totalFields}</span>{" "}
+                      fields
                     </span>
                     <span className="summary-dot">•</span>
                     <span>
@@ -612,7 +623,6 @@ function Builder() {
                       pre-populated
                     </span>
                   </div>
-
                 </>
               )}
 
@@ -646,7 +656,6 @@ function Builder() {
                 </div>
               )}
             </div>
-
           </>
         )}
       </div>

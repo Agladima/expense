@@ -5,7 +5,7 @@ import { LuCar, LuPlane, LuUpload } from "react-icons/lu";
 import { SlPlane } from "react-icons/sl";
 import { FiShoppingBag, FiPaperclip, FiX } from "react-icons/fi";
 import { PiTelegramLogoLight } from "react-icons/pi";
-import { IoLocationOutline, IoTimeOutline } from "react-icons/io5";
+import { IoCalendarOutline, IoLocationOutline, IoTimeOutline } from "react-icons/io5";
 import { BsPeople } from "react-icons/bs";
 
 function Expense() {
@@ -34,6 +34,14 @@ function Expense() {
     setExpenseType((prevType) => (prevType === type ? "" : type));
   };
 
+  const openDatePicker = () => {
+    if (!dateInputRef.current) return;
+    dateInputRef.current.focus();
+    if (typeof dateInputRef.current.showPicker === "function") {
+      dateInputRef.current.showPicker();
+    }
+  };
+
   const handleFileUpload = (e) => {
     const files = Array.from(e.target.files);
     const newFiles = files.map((file) => ({
@@ -47,17 +55,6 @@ function Expense() {
 
   const removeFile = (id) => {
     setUploadedFiles(uploadedFiles.filter((file) => file.id !== id));
-  };
-
-  const formatDateDisplay = (dateString) => {
-    if (!dateString) return "MM/DD/YYYY";
-    const date = new Date(dateString);
-    return date.toLocaleDateString("en-US", {
-      weekday: "long",
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    });
   };
 
   return (
@@ -110,29 +107,21 @@ function Expense() {
           </div>
 
           <label>Expense Date</label>
-          <div className="date-input-container">
-            <div
-              className="date-display dropdown"
-              onClick={() => {
-                if (!dateInputRef.current) return;
-                if (typeof dateInputRef.current.showPicker === "function") {
-                  dateInputRef.current.showPicker();
-                } else {
-                  dateInputRef.current.focus();
-                  dateInputRef.current.click();
-                }
-              }}
-            >
-              {formatDateDisplay(selectedDate)}
-            </div>
+          <div className="date-input-container" onClick={openDatePicker}>
+            <span className="date-picker-icon">
+              <IoCalendarOutline />
+            </span>
             <input
               ref={dateInputRef}
               type="date"
               className="date-picker"
               value={selectedDate}
               onChange={(e) => setSelectedDate(e.target.value)}
+              onClick={openDatePicker}
               max={today}
+              aria-label="Expense date"
             />
+            {!selectedDate && <span className="date-picker-placeholder">MM/DD/YYYY</span>}
           </div>
 
           {expenseType === "travel" && (

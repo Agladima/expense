@@ -663,27 +663,64 @@ textarea {
   position: relative;
 }
 
-.date-display.dropdown {
-  display: none;
-}
-
-.date-display.dropdown:hover {
-  background: #eceef1;
-}
-
 .date-picker {
-  position: static;
-  inset: auto;
-  opacity: 1;
-  pointer-events: auto;
-  z-index: auto;
+  position: relative;
+  z-index: 2;
   cursor: pointer;
   width: 100%;
-  padding: 14px 12px;
-  border-radius: 8px;
-  border: 1px solid #e4e6ea;
-  background: #f2f3f5;
+  min-height: 52px;
+  padding: 14px 44px 14px 44px;
+  border-radius: 10px;
+  border: 1px solid #dadce0;
+  background: #fff;
   color: #111827;
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.date-picker:focus {
+  border-color: #2c9a89;
+  box-shadow: 0 0 0 3px rgba(44, 154, 137, 0.12);
+}
+
+.date-picker-icon {
+  position: absolute;
+  top: 50%;
+  left: 14px;
+  transform: translateY(-50%);
+  z-index: 1;
+  color: #5f6368;
+  font-size: 18px;
+  pointer-events: none;
+}
+
+.date-picker-placeholder {
+  position: absolute;
+  top: 50%;
+  left: 44px;
+  transform: translateY(-50%);
+  z-index: 1;
+  color: #5f6368;
+  font-size: 14px;
+  pointer-events: none;
+}
+
+.date-picker::-webkit-calendar-picker-indicator {
+  position: absolute;
+  right: 12px;
+  opacity: 0;
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+}
+
+.date-picker::-webkit-datetime-edit {
+  color: #111827;
+}
+
+.date-picker:invalid::-webkit-datetime-edit {
+  color: transparent;
 }
 .required {
   color: #e53935;
