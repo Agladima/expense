@@ -1,11 +1,19 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import "./Expence.css";
 import { CiForkAndKnife } from "react-icons/ci";
 import { LuCar, LuPlane, LuUpload } from "react-icons/lu";
 import { SlPlane } from "react-icons/sl";
 import { FiShoppingBag, FiPaperclip, FiX } from "react-icons/fi";
+import { FaAngleUp } from "react-icons/fa6";
+import { IoIosArrowDown } from "react-icons/io";
 import { PiTelegramLogoLight } from "react-icons/pi";
-import { IoCalendarOutline, IoLocationOutline, IoTimeOutline } from "react-icons/io5";
+import {
+  IoCalendarOutline,
+  IoChevronBack,
+  IoChevronForward,
+  IoLocationOutline,
+  IoTimeOutline,
+} from "react-icons/io5";
 import { BsPeople } from "react-icons/bs";
 
 function Expense() {
@@ -25,21 +33,23 @@ function Expense() {
   const [startLocation, setStartLocation] = useState("");
   const [endLocation, setEndLocation] = useState("");
   const [distanceMiles, setDistanceMiles] = useState("");
+  const [calendarOpen, setCalendarOpen] = useState(false);
+  const [yearPickerOpen, setYearPickerOpen] = useState(false);
+  const [visibleMonth, setVisibleMonth] = useState(() => {
+    const initialDate = new Date();
+    initialDate.setDate(1);
+    initialDate.setHours(0, 0, 0, 0);
+    return initialDate;
+  });
 
-  const today = new Date().toISOString().split("T")[0];
-  const dateInputRef = useRef(null);
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const datePickerRef = useRef(null);
   const mileageRate = 0.67;
   const mileageTotal = (Number.parseFloat(distanceMiles) || 0) * mileageRate;
+
   const toggleExpenseType = (type) => {
     setExpenseType((prevType) => (prevType === type ? "" : type));
-  };
-
-  const openDatePicker = () => {
-    if (!dateInputRef.current) return;
-    dateInputRef.current.focus();
-    if (typeof dateInputRef.current.showPicker === "function") {
-      dateInputRef.current.showPicker();
-    }
   };
 
   const handleFileUpload = (e) => {
@@ -56,6 +66,114 @@ function Expense() {
   const removeFile = (id) => {
     setUploadedFiles(uploadedFiles.filter((file) => file.id !== id));
   };
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (!datePickerRef.current?.contains(event.target)) {
+        setCalendarOpen(false);
+        setYearPickerOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    document.addEventListener("touchstart", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("touchstart", handleClickOutside);
+    };
+  }, []);
+
+  const parseISODate = (dateString) => {
+    if (!dateString) return null;
+    const [year, month, day] = dateString.split("-").map(Number);
+    return new Date(year, month - 1, day);
+  };
+
+  const formatISODate = (date) => {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
+    return `${year}-${month}-${day}`;
+  };
+
+  const selectedDateValue = parseISODate(selectedDate);
+
+  const formatDateDisplay = (date) => {
+    if (!date) return "MM/DD/YYYY";
+    return date.toLocaleDateString("en-US", {
+      month: "short",
+      day: "numeric",
+      year: "numeric",
+    });
+  };
+
+  const handleOpenCalendar = () => {
+    setCalendarOpen(true);
+    setYearPickerOpen(false);
+    if (selectedDateValue) {
+      const nextVisibleMonth = new Date(selectedDateValue);
+      nextVisibleMonth.setDate(1);
+      setVisibleMonth(nextVisibleMonth);
+    }
+  };
+
+  const handleSelectDate = (date) => {
+    if (date > today) return;
+    setSelectedDate(formatISODate(date));
+    setCalendarOpen(false);
+    setYearPickerOpen(false);
+  };
+
+  const changeMonth = (offset) => {
+    setYearPickerOpen(false);
+    setVisibleMonth((prev) => {
+      const next = new Date(prev.getFullYear(), prev.getMonth() + offset, 1);
+      return next > new Date(today.getFullYear(), today.getMonth(), 1)
+        ? new Date(today.getFullYear(), today.getMonth(), 1)
+        : next;
+    });
+  };
+
+  const weekDays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+  const monthLabel = visibleMonth.toLocaleDateString("en-US", {
+    month: "short",
+  });
+  const currentYear = today.getFullYear();
+  const yearOptions = Array.from(
+    { length: currentYear - 1950 + 1 },
+    (_, index) => currentYear - index,
+  );
+
+  const firstDayOfMonth = new Date(
+    visibleMonth.getFullYear(),
+    visibleMonth.getMonth(),
+    1,
+  );
+  const calendarStartDate = new Date(firstDayOfMonth);
+  calendarStartDate.setDate(firstDayOfMonth.getDate() - firstDayOfMonth.getDay());
+
+  const calendarDays = Array.from({ length: 42 }, (_, index) => {
+    const date = new Date(calendarStartDate);
+    date.setDate(calendarStartDate.getDate() + index);
+
+    const isCurrentMonth = date.getMonth() === visibleMonth.getMonth();
+    const isSelected =
+      selectedDateValue &&
+      formatISODate(date) === formatISODate(selectedDateValue);
+    const isToday = formatISODate(date) === formatISODate(today);
+    const isFuture = date > today;
+
+    return {
+      key: formatISODate(date),
+      date,
+      label: date.getDate(),
+      isCurrentMonth,
+      isSelected,
+      isToday,
+      isFuture,
+    };
+  });
 
   return (
     <>
@@ -107,21 +225,105 @@ function Expense() {
           </div>
 
           <label>Expense Date</label>
-          <div className="date-input-container" onClick={openDatePicker}>
-            <span className="date-picker-icon">
-              <IoCalendarOutline />
-            </span>
-            <input
-              ref={dateInputRef}
-              type="date"
-              className="date-picker"
-              value={selectedDate}
-              onChange={(e) => setSelectedDate(e.target.value)}
-              onClick={openDatePicker}
-              max={today}
-              aria-label="Expense date"
-            />
-            {!selectedDate && <span className="date-picker-placeholder">MM/DD/YYYY</span>}
+          <div className="date-input-container" ref={datePickerRef}>
+            <button
+              type="button"
+              className="date-display dropdown"
+              onClick={handleOpenCalendar}
+            >
+              <span className="date-display-left">
+                <IoCalendarOutline />
+                <span>{formatDateDisplay(selectedDateValue)}</span>
+              </span>
+            </button>
+
+            {calendarOpen && (
+              <div className="custom-calendar">
+                <div className="calendar-header">
+                  <button
+                    type="button"
+                    className="calendar-nav-btn"
+                    onClick={() => changeMonth(-1)}
+                  >
+                    <IoChevronBack />
+                  </button>
+                  <div className="calendar-title-group">
+                    <span className="calendar-month-label">{monthLabel}</span>
+                    <button
+                      type="button"
+                      className="calendar-year-btn"
+                      onClick={() => setYearPickerOpen((prev) => !prev)}
+                    >
+                      <span>{visibleMonth.getFullYear()}</span>
+                      {yearPickerOpen ? <FaAngleUp /> : <IoIosArrowDown />}
+                    </button>
+                  </div>
+                  <button
+                    type="button"
+                    className="calendar-nav-btn"
+                    onClick={() => changeMonth(1)}
+                    disabled={
+                      visibleMonth.getFullYear() === today.getFullYear() &&
+                      visibleMonth.getMonth() === today.getMonth()
+                    }
+                  >
+                    <IoChevronForward />
+                  </button>
+                </div>
+
+                {yearPickerOpen && (
+                  <div className="calendar-year-list">
+                    {yearOptions.map((year) => (
+                      <button
+                        key={year}
+                        type="button"
+                        className={[
+                          "calendar-year-option",
+                          year === visibleMonth.getFullYear() && "active",
+                        ]
+                          .filter(Boolean)
+                          .join(" ")}
+                        onClick={() => {
+                          setVisibleMonth(
+                            new Date(year, visibleMonth.getMonth(), 1),
+                          );
+                          setYearPickerOpen(false);
+                        }}
+                      >
+                        {year}
+                      </button>
+                    ))}
+                  </div>
+                )}
+
+                <div className="calendar-weekdays">
+                  {weekDays.map((day) => (
+                    <span key={day}>{day}</span>
+                  ))}
+                </div>
+
+                <div className="calendar-grid">
+                  {calendarDays.map((day) => (
+                    <button
+                      key={day.key}
+                      type="button"
+                      className={[
+                        "calendar-day",
+                        !day.isCurrentMonth && "muted",
+                        day.isSelected && "selected",
+                        day.isToday && "today",
+                      ]
+                        .filter(Boolean)
+                        .join(" ")}
+                      onClick={() => handleSelectDate(day.date)}
+                      disabled={day.isFuture}
+                    >
+                      {day.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
 
           {expenseType === "travel" && (
