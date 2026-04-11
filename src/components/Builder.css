@@ -49,6 +49,19 @@
   transition: 0.2s;
 }
 
+.builder-card button:focus,
+.builder-card button:focus-visible,
+.builder-card select:focus,
+.builder-card select:focus-visible,
+.builder-card input:focus,
+.builder-card input:focus-visible,
+.builder-card textarea:focus,
+.builder-card textarea:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(44, 154, 137, 0.15);
+  border-color: #2c9a89;
+}
+
 .preview-btn {
   background: #f6f7f9;
   border: 1px solid #dcdcdc;

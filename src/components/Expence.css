@@ -223,6 +223,110 @@ textarea {
   background: #f6f7f9;
 }
 
+.expense-form-card button:focus,
+.expense-form-card button:focus-visible,
+.expense-form-card select:focus,
+.expense-form-card select:focus-visible,
+.expense-form-card input:focus,
+.expense-form-card input:focus-visible,
+.expense-form-card textarea:focus,
+.expense-form-card textarea:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(44, 154, 137, 0.12);
+  border-color: #2c9a89;
+}
+
+.themed-select {
+  appearance: none;
+  background-color: #f6f7f9;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 20 20' fill='none'%3E%3Cpath d='M5 7.5L10 12.5L15 7.5' stroke='%232c9a89' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  background-size: 14px 14px;
+  border-color: #d9e3df;
+  color: #304943;
+  padding-right: 40px;
+  transition: border-color 0.2s, background-color 0.2s, box-shadow 0.2s;
+}
+
+.themed-select:hover,
+.themed-select:focus {
+  background-color: #eef8f6;
+  border-color: #2c9a89;
+  box-shadow: 0 0 0 3px rgba(44, 154, 137, 0.12);
+}
+
+.custom-select {
+  position: relative;
+}
+
+.custom-select-trigger {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 14px;
+  border-radius: 8px;
+  border: 1px solid #d9e3df;
+  background: #f6f7f9;
+  color: #304943;
+  font-size: 14px;
+  text-align: left;
+  cursor: pointer;
+  transition: border-color 0.2s, background-color 0.2s, box-shadow 0.2s;
+}
+
+.custom-select-trigger svg {
+  color: #2c9a89;
+  flex-shrink: 0;
+}
+
+.custom-select-trigger:hover,
+.custom-select-trigger.open {
+  background: #eef8f6;
+  border-color: #2c9a89;
+}
+
+.custom-select-menu {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  width: 100%;
+  border: 1px solid #d9e3df;
+  border-radius: 10px;
+  background: #fff;
+  box-shadow: 0 12px 24px rgba(28, 52, 47, 0.1);
+  padding: 6px;
+  z-index: 20;
+}
+
+.custom-select-option {
+  width: 100%;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  color: #304943;
+  font-size: 14px;
+  text-align: left;
+  padding: 10px 12px;
+  cursor: pointer;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.custom-select-option:hover,
+.custom-select-option:focus,
+.custom-select-option:focus-visible {
+  background: #eef8f6;
+  color: #2c9a89;
+  outline: none;
+}
+
+.custom-select-option.selected {
+  background: #2c9a89;
+  color: #fff;
+}
+
 textarea {
   min-height: 104px;
   resize: none;

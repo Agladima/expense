@@ -17,9 +17,17 @@ import {
 import { BsPeople } from "react-icons/bs";
 
 function Expense() {
+  const projectOptions = [
+    { value: "a", label: "Website Development" },
+    { value: "b", label: "Mobile App Development" },
+    { value: "c", label: "API Integration" },
+    { value: "d", label: "Client Meeting" },
+    { value: "e", label: "General Operations" },
+  ];
   const [expenseType, setExpenseType] = useState("");
   const [amount, setAmount] = useState("");
   const [project, setProject] = useState("");
+  const [projectMenuOpen, setProjectMenuOpen] = useState(false);
   const [description, setDescription] = useState("");
   const [selectedDate, setSelectedDate] = useState("");
   const [uploadedFiles, setUploadedFiles] = useState([]);
@@ -45,6 +53,7 @@ function Expense() {
   const today = new Date();
   today.setHours(0, 0, 0, 0);
   const datePickerRef = useRef(null);
+  const projectSelectRef = useRef(null);
   const mileageRate = 0.67;
   const mileageTotal = (Number.parseFloat(distanceMiles) || 0) * mileageRate;
 
@@ -72,6 +81,9 @@ function Expense() {
       if (!datePickerRef.current?.contains(event.target)) {
         setCalendarOpen(false);
         setYearPickerOpen(false);
+      }
+      if (!projectSelectRef.current?.contains(event.target)) {
+        setProjectMenuOpen(false);
       }
     };
 
@@ -174,6 +186,10 @@ function Expense() {
       isFuture,
     };
   });
+
+  const selectedProjectLabel =
+    projectOptions.find((option) => option.value === project)?.label ||
+    "Select project";
 
   return (
     <>
@@ -515,14 +531,44 @@ function Expense() {
           )}
 
           <label>Project / Cost Center</label>
-          <select value={project} onChange={(e) => setProject(e.target.value)}>
-            <option value="">Select project</option>
-            <option value="a">Website Development</option>
-            <option value="b">Mobile App Development</option>
-            <option value="c">API Integration</option>
-            <option value="d">Client Meeting</option>
-            <option value="e">General Operations</option>
-          </select>
+          <div className="custom-select" ref={projectSelectRef}>
+            <button
+              type="button"
+              className={[
+                "custom-select-trigger",
+                projectMenuOpen && "open",
+              ]
+                .filter(Boolean)
+                .join(" ")}
+              onClick={() => setProjectMenuOpen((prev) => !prev)}
+            >
+              <span>{selectedProjectLabel}</span>
+              <IoIosArrowDown />
+            </button>
+
+            {projectMenuOpen && (
+              <div className="custom-select-menu">
+                {projectOptions.map((option) => (
+                  <button
+                    key={option.value}
+                    type="button"
+                    className={[
+                      "custom-select-option",
+                      project === option.value && "selected",
+                    ]
+                      .filter(Boolean)
+                      .join(" ")}
+                    onClick={() => {
+                      setProject(option.value);
+                      setProjectMenuOpen(false);
+                    }}
+                  >
+                    {option.label}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
 
           <label>Description</label>
           <textarea
