@@ -1,16 +1,42 @@
-# React + Vite
+# Expense App
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This project now has:
 
-Currently, two official plugins are available:
+- a Vite React frontend in `src/`
+- a lightweight Node backend in `server/`
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Run
 
-## React Compiler
+Start the frontend:
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+```bash
+npm run dev
+```
 
-## Expanding the ESLint configuration
+Start the backend:
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+```bash
+npm run dev:server
+```
+
+The backend runs on `http://localhost:4000`.
+
+## Backend API
+
+Available routes:
+
+- `GET /api/health`
+- `GET /api/expenses`
+- `POST /api/expenses`
+- `GET /api/forms`
+- `POST /api/forms`
+- `PUT /api/forms/:id`
+- `DELETE /api/forms/:id`
+
+## Data Storage
+
+The backend uses a local JSON file for now:
+
+- `server/data/db.json`
+
+That gives us a usable backend immediately without introducing a database before the frontend is wired up.

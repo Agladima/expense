@@ -17,6 +17,7 @@ import {
 import { BsPeople } from "react-icons/bs";
 
 function Expense() {
+  const API_BASE = "http://localhost:4000/api";
   const projectOptions = [
     { value: "a", label: "Website Development" },
     { value: "b", label: "Mobile App Development" },
@@ -41,6 +42,8 @@ function Expense() {
   const [startLocation, setStartLocation] = useState("");
   const [endLocation, setEndLocation] = useState("");
   const [distanceMiles, setDistanceMiles] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitMessage, setSubmitMessage] = useState("");
   const [calendarOpen, setCalendarOpen] = useState(false);
   const [yearPickerOpen, setYearPickerOpen] = useState(false);
   const [visibleMonth, setVisibleMonth] = useState(() => {
@@ -190,6 +193,95 @@ function Expense() {
   const selectedProjectLabel =
     projectOptions.find((option) => option.value === project)?.label ||
     "Select project";
+
+  const resetExpenseForm = () => {
+    setExpenseType("");
+    setAmount("");
+    setProject("");
+    setProjectMenuOpen(false);
+    setDescription("");
+    setSelectedDate("");
+    setUploadedFiles([]);
+    setTravelPurpose("");
+    setFromCity("");
+    setToCity("");
+    setTravelDays("");
+    setMealType("");
+    setAttendees("");
+    setMealBusinessPurpose("");
+    setStartLocation("");
+    setEndLocation("");
+    setDistanceMiles("");
+    setCalendarOpen(false);
+    setYearPickerOpen(false);
+  };
+
+  const handleSubmitExpense = async () => {
+    const details =
+      expenseType === "travel"
+        ? {
+            purpose: travelPurpose,
+            fromCity,
+            toCity,
+            numberOfDays: travelDays,
+          }
+        : expenseType === "meals"
+          ? {
+              mealType,
+              attendees,
+              businessPurpose: mealBusinessPurpose,
+            }
+          : expenseType === "mileage"
+            ? {
+                startLocation,
+                endLocation,
+                distanceMiles,
+                rate: mileageRate,
+                total: mileageTotal.toFixed(2),
+              }
+            : {};
+
+    const payload = {
+      expenseType,
+      expenseDate: selectedDate,
+      amount: expenseType === "mileage" ? mileageTotal.toFixed(2) : amount,
+      project,
+      description,
+      details: {
+        ...details,
+        receipts: uploadedFiles.map((file) => ({
+          name: file.name,
+          sizeKb: file.size,
+        })),
+      },
+    };
+
+    setIsSubmitting(true);
+    setSubmitMessage("");
+
+    try {
+      const response = await fetch(`${API_BASE}/expenses`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+      });
+
+      if (!response.ok) {
+        throw new Error("Unable to submit expense");
+      }
+
+      resetExpenseForm();
+      setSubmitMessage("Expense submitted successfully");
+    } catch (error) {
+      setSubmitMessage(
+        error instanceof Error ? error.message : "Unable to submit expense",
+      );
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   return (
     <>
@@ -643,10 +735,15 @@ function Expense() {
             </div>
           </div>
 
-          <button className="submit-expense">
+          <button
+            className="submit-expense"
+            type="button"
+            onClick={handleSubmitExpense}
+          >
             <PiTelegramLogoLight className="send-icon" />
-            <span>Submit Expense Claim</span>
+            <span>{isSubmitting ? "Submitting..." : "Submit Expense Claim"}</span>
           </button>
+          {submitMessage && <p className="submit-status">{submitMessage}</p>}
         </div>
       </div>
     </>

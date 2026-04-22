@@ -16,10 +16,17 @@ import { LuGripVertical } from "react-icons/lu";
 import { FaCheckCircle } from "react-icons/fa";
 
 function Builder() {
+  const API_BASE = "http://localhost:4000/api";
   const [isPreview, setIsPreview] = useState(false);
   const [showFieldSelector, setShowFieldSelector] = useState(false);
+  const [formName, setFormName] = useState("");
+  const [formDescription, setFormDescription] = useState("");
   const [formFields, setFormFields] = useState([]);
+  const [savedFormId, setSavedFormId] = useState(null);
   const [expandedFieldId, setExpandedFieldId] = useState(null);
+  const [placeholderMap, setPlaceholderMap] = useState({});
+  const [helpTextMap, setHelpTextMap] = useState({});
+  const [fieldWidthMap, setFieldWidthMap] = useState({});
   const [validationExpanded, setValidationExpanded] = useState({});
   const [requiredMap, setRequiredMap] = useState({});
   const [ruleMenuOpen, setRuleMenuOpen] = useState({});
@@ -32,6 +39,7 @@ function Builder() {
   const [defaultValueMap, setDefaultValueMap] = useState({});
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
+  const [isSaving, setIsSaving] = useState(false);
   const toastTimeoutRef = useRef(null);
   const FIELD_TYPES = [
     {
@@ -158,6 +166,21 @@ function Builder() {
       delete next[id];
       return next;
     });
+    setPlaceholderMap((prev) => {
+      const next = { ...prev };
+      delete next[id];
+      return next;
+    });
+    setHelpTextMap((prev) => {
+      const next = { ...prev };
+      delete next[id];
+      return next;
+    });
+    setFieldWidthMap((prev) => {
+      const next = { ...prev };
+      delete next[id];
+      return next;
+    });
     triggerToast("Field removed");
   };
 
@@ -175,10 +198,66 @@ function Builder() {
     setConditionalCondition({});
     setConditionalValue({});
     setDefaultValueMap({});
+    setPlaceholderMap({});
+    setHelpTextMap({});
+    setFieldWidthMap({});
+    setSavedFormId(null);
   };
 
-  const handleSave = () => {
-    triggerToast("Form save successfully");
+  const handleSave = async () => {
+    const payload = {
+      name: formName.trim() || "Untitled Form",
+      description: formDescription.trim(),
+      fields: formFields.map((field) => ({
+        id: field.id,
+        label: field.label.trim() || "Untittled Field",
+        type: field.typeLabel,
+        placeholder: placeholderMap[field.id] || "",
+        helpText: helpTextMap[field.id] || "",
+        defaultValue: defaultValueMap[field.id] || "",
+        fieldWidth: fieldWidthMap[field.id] || "Full Width",
+        validation: {
+          required: !!requiredMap[field.id],
+          rules: [],
+        },
+        conditionalLogic: {
+          enabled: !!conditionalEnabled[field.id],
+          action: conditionalAction[field.id] || "show-this-field",
+          field: conditionalField[field.id] || "",
+          condition: conditionalCondition[field.id] || "",
+          value: conditionalValue[field.id] || "",
+        },
+      })),
+    };
+
+    setIsSaving(true);
+
+    try {
+      const response = await fetch(
+        savedFormId ? `${API_BASE}/forms/${savedFormId}` : `${API_BASE}/forms`,
+        {
+          method: savedFormId ? "PUT" : "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(payload),
+        },
+      );
+
+      if (!response.ok) {
+        throw new Error("Unable to save form");
+      }
+
+      const savedForm = await response.json();
+      setSavedFormId(savedForm.id);
+      triggerToast("Form save successfully");
+    } catch (error) {
+      triggerToast(
+        error instanceof Error ? error.message : "Unable to save form",
+      );
+    } finally {
+      setIsSaving(false);
+    }
   };
 
   const triggerToast = (message) => {
@@ -219,7 +298,8 @@ function Builder() {
                   <IoEyeOutline className="icon-inline" /> Preview
                 </button>
                 <button className="save-btn" onClick={handleSave}>
-                  <FiSave className="icon-inline" /> Save
+                  <FiSave className="icon-inline" />{" "}
+                  {isSaving ? "Saving..." : "Save"}
                 </button>
               </>
             ) : (
@@ -238,9 +318,11 @@ function Builder() {
             <div className="thin-separator"></div>
             <div className="preview-header">
               <div>
-                <h1 className="preview-title">My Custom Form</h1>
+                <h1 className="preview-title">
+                  {formName.trim() || "Untitled Form"}
+                </h1>
                 <p className="preview-desc">
-                  A form built with the custom form builder
+                  {formDescription.trim() || "Brief Description"}
                 </p>
               </div>
               <button className="status-btn">
@@ -254,11 +336,21 @@ function Builder() {
             <div className="form-meta">
               <div className="form-name">
                 <label>Form Name</label>
-                <input type="text" placeholder="Enter form name" />
+                <input
+                  type="text"
+                  placeholder="Enter form name"
+                  value={formName}
+                  onChange={(e) => setFormName(e.target.value)}
+                />
               </div>
               <div className="form-desc">
                 <label>Form Description</label>
-                <input type="text" placeholder="Brief Description" />
+                <input
+                  type="text"
+                  placeholder="Brief Description"
+                  value={formDescription}
+                  onChange={(e) => setFormDescription(e.target.value)}
+                />
               </div>
             </div>
 
@@ -352,6 +444,13 @@ function Builder() {
                                 type="text"
                                 placeholder="Placeholder text"
                                 className="field-input"
+                                value={placeholderMap[field.id] || ""}
+                                onChange={(e) =>
+                                  setPlaceholderMap((prev) => ({
+                                    ...prev,
+                                    [field.id]: e.target.value,
+                                  }))
+                                }
                               />
                             </div>
                           </div>
@@ -361,6 +460,13 @@ function Builder() {
                               type="text"
                               placeholder="Additional instructions for users"
                               className="field-input"
+                              value={helpTextMap[field.id] || ""}
+                              onChange={(e) =>
+                                setHelpTextMap((prev) => ({
+                                  ...prev,
+                                  [field.id]: e.target.value,
+                                }))
+                              }
                             />
                           </div>
                           <div className="field-input-stack">
@@ -380,7 +486,16 @@ function Builder() {
                           </div>
                           <div className="field-input-stack">
                             <label>Field Width</label>
-                            <select className="field-input field-select">
+                            <select
+                              className="field-input field-select"
+                              value={fieldWidthMap[field.id] || "Full Width"}
+                              onChange={(e) =>
+                                setFieldWidthMap((prev) => ({
+                                  ...prev,
+                                  [field.id]: e.target.value,
+                                }))
+                              }
+                            >
                               <option>Full Width</option>
                               <option>Half Width</option>
                             </select>

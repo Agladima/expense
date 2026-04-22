@@ -763,6 +763,13 @@ textarea {
 .submit-expense:hover {
   background: #2c9a89;
 }
+
+.submit-status {
+  margin-top: 10px;
+  font-size: 13px;
+  color: #2c9a89;
+  text-align: center;
+}
 .date-input-container {
   position: relative;
 }
