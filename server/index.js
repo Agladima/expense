@@ -1,172 +1,155 @@
-import http from "node:http";
-import { readJsonBody, sendJson } from "./lib/http.js";
-import { createId, readDb, writeDb } from "./lib/store.js";
+import "dotenv/config";
+import Fastify from "fastify";
+import { prisma } from "./lib/prisma.js";
 
 const port = Number(process.env.PORT || 4000);
+const host = process.env.HOST || "0.0.0.0";
 
-function notFound(response) {
-  sendJson(response, 404, { message: "Route not found" });
-}
+const app = Fastify({
+  logger: true,
+});
 
-function getPathname(requestUrl = "/") {
-  return new URL(requestUrl, "http://localhost").pathname;
-}
+app.addHook("onRequest", async (request, reply) => {
+  reply.header("Access-Control-Allow-Origin", "*");
+  reply.header("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,OPTIONS");
+  reply.header("Access-Control-Allow-Headers", "Content-Type");
 
-async function handleHealth(_request, response) {
-  sendJson(response, 200, {
-    status: "ok",
-    service: "expense-backend",
-    timestamp: new Date().toISOString(),
-  });
-}
+  if (request.method === "OPTIONS") {
+    reply.code(204).send();
+  }
+});
 
-async function handleGetExpenses(_request, response) {
-  const db = await readDb();
-  sendJson(response, 200, db.expenses);
-}
-
-async function handleCreateExpense(request, response) {
-  const payload = await readJsonBody(request);
-
-  const nextExpense = {
-    id: createId("expense"),
-    expenseType: payload.expenseType || "",
-    expenseDate: payload.expenseDate || "",
-    amount: payload.amount || "",
-    project: payload.project || "",
-    description: payload.description || "",
-    details: payload.details || {},
-    createdAt: new Date().toISOString(),
-  };
-
-  const db = await readDb();
-  db.expenses.unshift(nextExpense);
-  await writeDb(db);
-
-  sendJson(response, 201, nextExpense);
-}
-
-async function handleGetForms(_request, response) {
-  const db = await readDb();
-  sendJson(response, 200, db.forms);
-}
-
-async function handleCreateForm(request, response) {
-  const payload = await readJsonBody(request);
-
-  const nextForm = {
-    id: createId("form"),
-    name: payload.name || "Untitled Form",
-    description: payload.description || "",
+function normalizeFormPayload(payload = {}) {
+  return {
+    name: payload.name?.trim() || "Untitled Form",
+    description: payload.description?.trim() || "",
     fields: Array.isArray(payload.fields) ? payload.fields : [],
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString(),
   };
-
-  const db = await readDb();
-  db.forms.unshift(nextForm);
-  await writeDb(db);
-
-  sendJson(response, 201, nextForm);
 }
 
-async function handleUpdateForm(request, response, formId) {
-  const payload = await readJsonBody(request);
-  const db = await readDb();
-  const formIndex = db.forms.findIndex((form) => form.id === formId);
-
-  if (formIndex === -1) {
-    sendJson(response, 404, { message: "Form not found" });
-    return;
-  }
-
-  const existing = db.forms[formIndex];
-  const updatedForm = {
-    ...existing,
-    name: payload.name ?? existing.name,
-    description: payload.description ?? existing.description,
-    fields: Array.isArray(payload.fields) ? payload.fields : existing.fields,
-    updatedAt: new Date().toISOString(),
+function normalizeExpensePayload(payload = {}) {
+  return {
+    expenseType: payload.expenseType?.trim() || "",
+    expenseDate: payload.expenseDate?.trim() || "",
+    amount: String(payload.amount ?? ""),
+    project: payload.project?.trim() || "",
+    description: payload.description?.trim() || "",
+    details: payload.details && typeof payload.details === "object" ? payload.details : {},
   };
-
-  db.forms[formIndex] = updatedForm;
-  await writeDb(db);
-
-  sendJson(response, 200, updatedForm);
 }
 
-async function handleDeleteForm(_request, response, formId) {
-  const db = await readDb();
-  const nextForms = db.forms.filter((form) => form.id !== formId);
+app.get("/api/health", async () => ({
+  status: "ok",
+  service: "expense-backend",
+  database: "postgresql",
+  timestamp: new Date().toISOString(),
+}));
 
-  if (nextForms.length === db.forms.length) {
-    sendJson(response, 404, { message: "Form not found" });
-    return;
-  }
+app.get("/api/expenses", async (_request, reply) => {
+  const expenses = await prisma.expense.findMany({
+    orderBy: {
+      createdAt: "desc",
+    },
+  });
 
-  db.forms = nextForms;
-  await writeDb(db);
+  reply.send(expenses);
+});
 
-  sendJson(response, 200, { success: true });
-}
+app.post("/api/expenses", async (request, reply) => {
+  const nextExpense = normalizeExpensePayload(request.body);
 
-const server = http.createServer(async (request, response) => {
+  const createdExpense = await prisma.expense.create({
+    data: nextExpense,
+  });
+
+  reply.code(201).send(createdExpense);
+});
+
+app.get("/api/forms", async (_request, reply) => {
+  const forms = await prisma.form.findMany({
+    orderBy: {
+      updatedAt: "desc",
+    },
+  });
+
+  reply.send(forms);
+});
+
+app.post("/api/forms", async (request, reply) => {
+  const nextForm = normalizeFormPayload(request.body);
+
+  const createdForm = await prisma.form.create({
+    data: nextForm,
+  });
+
+  reply.code(201).send(createdForm);
+});
+
+app.put("/api/forms/:id", async (request, reply) => {
+  const nextForm = normalizeFormPayload(request.body);
+
   try {
-    const pathname = getPathname(request.url);
-
-    if (request.method === "OPTIONS") {
-      sendJson(response, 200, { ok: true });
-      return;
-    }
-
-    if (request.method === "GET" && pathname === "/api/health") {
-      await handleHealth(request, response);
-      return;
-    }
-
-    if (request.method === "GET" && pathname === "/api/expenses") {
-      await handleGetExpenses(request, response);
-      return;
-    }
-
-    if (request.method === "POST" && pathname === "/api/expenses") {
-      await handleCreateExpense(request, response);
-      return;
-    }
-
-    if (request.method === "GET" && pathname === "/api/forms") {
-      await handleGetForms(request, response);
-      return;
-    }
-
-    if (request.method === "POST" && pathname === "/api/forms") {
-      await handleCreateForm(request, response);
-      return;
-    }
-
-    if (pathname.startsWith("/api/forms/")) {
-      const formId = pathname.replace("/api/forms/", "");
-
-      if (request.method === "PUT") {
-        await handleUpdateForm(request, response, formId);
-        return;
-      }
-
-      if (request.method === "DELETE") {
-        await handleDeleteForm(request, response, formId);
-        return;
-      }
-    }
-
-    notFound(response);
-  } catch (error) {
-    sendJson(response, 500, {
-      message: "Internal server error",
-      error: error instanceof Error ? error.message : "Unknown error",
+    const updatedForm = await prisma.form.update({
+      where: {
+        id: request.params.id,
+      },
+      data: nextForm,
     });
+
+    reply.send(updatedForm);
+  } catch (error) {
+    if (error?.code === "P2025") {
+      reply.code(404).send({ message: "Form not found" });
+      return;
+    }
+
+    throw error;
   }
 });
 
-server.listen(port, () => {
-  console.log(`Backend running on http://localhost:${port}`);
+app.delete("/api/forms/:id", async (request, reply) => {
+  try {
+    await prisma.form.delete({
+      where: {
+        id: request.params.id,
+      },
+    });
+
+    reply.send({ success: true });
+  } catch (error) {
+    if (error?.code === "P2025") {
+      reply.code(404).send({ message: "Form not found" });
+      return;
+    }
+
+    throw error;
+  }
 });
+
+app.setErrorHandler((error, request, reply) => {
+  request.log.error(error);
+  reply.code(500).send({
+    message: "Internal server error",
+    error: error.message,
+  });
+});
+
+async function start() {
+  try {
+    await app.listen({ port, host });
+  } catch (error) {
+    app.log.error(error);
+    process.exit(1);
+  }
+}
+
+const shutdown = async () => {
+  await app.close();
+  await prisma.$disconnect();
+  process.exit(0);
+};
+
+process.on("SIGINT", shutdown);
+process.on("SIGTERM", shutdown);
+
+start();

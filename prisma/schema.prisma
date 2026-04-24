@@ -1,0 +1,32 @@
+generator client {
+  provider = "prisma-client-js"
+  engineType = "client"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Form {
+  id          String   @id @default(cuid())
+  name        String
+  description String   @default("")
+  fields      Json
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("forms")
+}
+
+model Expense {
+  id          String   @id @default(cuid())
+  expenseType String
+  expenseDate String
+  amount      String
+  project     String
+  description String   @default("")
+  details     Json
+  createdAt   DateTime @default(now())
+
+  @@map("expenses")
+}
